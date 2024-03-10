@@ -1,6 +1,14 @@
-# SCVulBERT
+# SolGPT
 
-Smart Contract Vul for Detection based on Pretrain Bert (torch backen)
+Model Training Part for Solidity vulnerability Detection based on GPT (torch backen)
+
+## Paper
+
+Paper "SolGPT: a GPT-Based Static Vulnerability Detection Model for Enhancing Smart Contract Security" has published in ICA3PP 2023.
+
+Author: Shengqiang Zeng, Hongwei Zhang, Jinsong Wang, and Kai Shi.
+
+Paper Manuscript already upload as name "SolGPT.9.17.2023".
 
 ## Requirements
 
@@ -24,25 +32,13 @@ The train data after normalization in `dataset`.
 
 ## OverView
 
-### Model
-
-In our experiment, we modify the last layer to a two-classification task using a pre-train Bert-base model.
-
-Tokenization and Hyperparameters are the same for the baseline (bert-base-cased), which hyperparameters from `E50_com.py` are used.
-
-Implementation is very basic without many optimizations, so it is easier to debug and play around with the code.
-
-* hyperparameters please edit E50_com.py
-
 ### Trainning
 
-You can directly run with the E65 file, and you can also specify the dataset with first parameter, this will replace the E50 hyperparameters setting.
+Training contain two part
+* TAPT training
+* finetunnng
 
-In train.sh will run
-
-* python E65_train.py
-* python E65_train.py dataset/reentrancy_273.txt
-* sh train.sh
+You can see the instruction in train_tapt.sh and train_finetune.sh to learn how to train this model
 
 ## References
 
