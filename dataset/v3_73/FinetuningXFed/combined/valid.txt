@@ -1,0 +1,4834 @@
+138 50058.sol
+contract WL2 {
+address public owner;
+modifier onlyOwner {
+require(msg.sender==owner);
+_;
+}
+function wallet(address addr) payable onlyOwner {
+if (msg.data.length > 0)
+addr.delegatecall(msg.data);
+}
+}
+0
+---------------------------------
+139 50049.sol
+contract Caller_delegatecall {
+address public owner;
+function callByAddr(address addr) public returns (bool){
+require(owner==msg.sender);
+bytes4 methodId = bytes4(keccak256("inc(uint256)"));
+return addr.delegatecall(methodId, 2);
+}
+}
+0
+---------------------------------
+140 50005.sol
+contract IERC {
+function delegate(address addr, bytes memory b) public payable {
+addr.delegatecall(b);
+}
+}
+3
+---------------------------------
+141 50036.sol
+contract Authority {
+address public owner;
+mapping(uint=>address) delegateCallers;
+function setdelegate(uint num, address addr) {
+require(owner==msg.sender);
+delegateCallers[num]=addr;
+}
+function delegate(uint id, bytes32 data) public {
+delegateCallers[id].delegatecall(data);
+}
+}
+0
+---------------------------------
+142 50025.sol
+contract Proxy {
+address callee;
+function forward(bytes _data) public {
+require(callee.delegatecall(_data));
+}
+}
+3
+---------------------------------
+143 50051.sol
+contract WL1 {
+address public owner;
+function wallet(address addr) payable {
+require(owner==msg.sender);
+if (msg.data.length > 0)
+addr.delegatecall(msg.data);
+}
+}
+0
+---------------------------------
+144 50021.sol
+contract Machine {
+function addValuesWithDelegateCall(address calculator, uint256 a, uint256 b) public returns (uint256) {
+calculator.delegatecall(abi.encodeWithSignature("add(uint256,uint256)", a, b));
+}
+}
+3
+---------------------------------
+145 50059.sol
+contract AppProxyBase2 {
+function transfer(address addr) public {
+if (msg.value > 0) {
+addr.delegatecall(msg.value);
+} else {
+revert();
+}
+}
+}
+3
+---------------------------------
+146 50017.sol
+contract ProtocolSettings {
+address public owner;
+modifier onlyOwner {
+require(msg.sender==owner);
+_;
+}
+function setSupportedTokens(address addr, bool withApprovals) external onlyOwner {
+if (withApprovals) {
+bytes memory data = abi.encodeWithSelector(0x4a99e3a1, addr);
+addr.delegatecall(data);
+}
+}
+}
+0
+---------------------------------
+147 50062.sol
+contract CToken{
+address public owner;
+function functionOne(address addr,uint256 _valueOne, uint256 _valueTwo, uint256 _valueThree, uint256 _valueFour) public returns (bool ok) {
+require(owner==msg.sender);
+return addr.delegatecall(bytes4(sha3("functionOne(uint256,uint256,uint256,uint256)")), _valueOne, _valueTwo, _valueThree, _valueFour);
+}
+}
+0
+---------------------------------
+148 23089.sol
+contract DelegateProxy {
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function delegateProxy(address addr, bytes calldata) public onlyOwner returns (bool result) {
+return addr.delegatecall(calldata);
+}
+}
+0
+---------------------------------
+149 50033.sol
+contract Upgradeable {
+address owner = 0x29999;
+function replace(address target) external {
+require(owner == msg.sender);
+require(target.delegatecall(bytes4(keccak256("initialize()"))));
+}
+}
+0
+---------------------------------
+150 50050.sol
+contract Call_delegatecall {
+address public owner;
+address public callee;
+function setcallee(address newcallee) {
+require(msg.sender==owner);
+callee = newcallee;
+}
+function callByAddr() public returns (bool) {
+bytes4 methodId = bytes4(keccak256("inc(uint256)"));
+return callee.delegatecall(methodId,2);
+}
+}
+0
+---------------------------------
+151 50000.sol
+contract UpgradeabilityProxy {
+function withdraw(address _logic, bytes memory _data) public payable {
+if(_data.length > 0) {
+bool success = _logic.delegatecall(_data);
+require(success);
+}
+}
+}
+3
+---------------------------------
+152 50012.sol
+contract Helper_ModifiableStorage {
+mapping (address => address) private target;
+modifier onlyOwner(){
+require(target[address(this)] != 0);
+_;
+}
+function add(address _target) onlyOwner {
+target[address(this)] = _target;
+}
+function store(address addr) public {
+target[addr] = target[address(this)];
+target[addr].delegatecall(msg.data);
+}
+}
+0
+---------------------------------
+153 50069.sol
+contract tester {
+address public owner;
+address public testaddress;
+function setTestaddress(address _testaddress) {
+require(owner==msg.sender);
+testaddress = _testaddress;
+}
+function withdelegatecall() public {
+testaddress.delegatecall(bytes4(keccak256("test()")));
+}
+}
+0
+---------------------------------
+154 50031.sol
+contract Mokens{
+address public owner;
+function moke(address addr) external {
+require(owner==msg.sender);
+bytes memory data = msg.data;
+addr.delegatecall(data);
+}
+}
+0
+---------------------------------
+155 50055.sol
+contract StandardReceiver {
+address owner;
+modifier onlyOwner {
+require(owner==msg.sender);
+_;
+}
+function tokenFallback(address _sender, bytes _data) external onlyOwner returns (bool ok){
+if (_sender.delegatecall(_data)) {
+return false;
+}
+return true;
+}
+}
+0
+---------------------------------
+156 50047.sol
+contract EllipseMarket{
+address public mmLib;
+modifier onlyOwner {
+require(mmLib==msg.sender);
+_;
+}
+function EllipseMarketMaker(address _mmLib,bytes32 m_data) public onlyOwner {
+require(_mmLib.delegatecall(m_data));
+}
+}
+0
+---------------------------------
+157 50038.sol
+contract Controller {
+function sweep(address _token, uint _amount) public returns (bool) {
+return _token.delegatecall(_amount);
+}
+}
+3
+---------------------------------
+158 50054.sol
+contract testBank{
+uint256 public Limit= 1000000000000000001;
+function withdrawal(address addr) payable public {
+if(msg.value > Limit){
+addr.delegatecall(bytes4(sha3("logEvent()")));
+}
+}
+}
+3
+---------------------------------
+159 50042.sol
+contract MultiSig {
+address owner;
+function execute(address scriptAddress) public returns (bool result) {
+require(owner==msg.sender);
+if(scriptAddress.delegatecall(bytes4(keccak256("execute(address)")), scriptAddress)) {
+result = true;
+} else {
+result = false;
+}
+}
+}
+0
+---------------------------------
+160 50044.sol
+contract DelegateProxy4 {
+address public owner;
+modifier onlyOwner {
+require(owner==msg.sender);
+_;
+}
+function delegatedFwd(address _dst, bytes _calldata) public onlyOwner {
+assembly {
+let result := delegatecall(sub(gas, 10000), _dst, add(_calldata, 0x20), mload(_calldata), 0, 0)
+}
+}
+}
+0
+---------------------------------
+161 50028.sol
+contract Relay {
+address public currentVersion;
+address public owner;
+function changeContract(address newVersion) public {
+require(msg.sender==owner);
+currentVersion = newVersion;
+}
+function transation() {
+if(!currentVersion.delegatecall(msg.data)) throw;
+}
+}
+0
+---------------------------------
+162 50026.sol
+contract LightContract {
+address owner;
+modifier onlyOwner {
+require(msg.sender==owner);
+_;
+}
+function delegate(address addr) public onlyOwner {
+require(addr.delegatecall(msg.data));
+}
+}
+0
+---------------------------------
+163 50008.sol
+contract test {
+function setVars(address _contract, uint _num) public payable {
+_contract.delegatecall(abi.encodeWithSignature("setVars(uint256)", _num));
+}
+}
+3
+---------------------------------
+164 50041.sol
+contract MineableM5Token {
+function swap(address M5Logic_,uint256 _value) public returns (bool) {
+require(M5Logic_.delegatecall(bytes4(keccak256("swap(uint256)")), _value));
+return true;
+}
+}
+0
+---------------------------------
+165 50067.sol
+contract Prover {
+address owner;
+modifier onlyOwner {
+require(owner==msg.sender);
+_;
+}
+function Delegate(address addr,bytes data) onlyOwner {
+require(addr.delegatecall(data));
+}
+}
+0
+---------------------------------
+166 50034.sol
+contract Machine {
+address public owner;
+address public calculator;
+function addC(address addr) {
+require(owner==msg.sender);
+calculator=addr;
+}
+function addValuesWithDelegateCall(uint256 a, uint256 b) public {
+calculator.delegatecall(abi.encodeWithSignature("add(uint256,uint256)", a, b));
+}
+}
+0
+---------------------------------
+167 50024.sol
+contract Delegation {
+address public owner;
+modifier onlyOwner {
+require(msg.sender == owner);
+_;
+}
+function delegation(address addr) onlyOwner {
+if(!addr.delegatecall(msg.data)) { throw; }
+}
+}
+0
+---------------------------------
+168 51000.sol
+contract Delegate {
+address public owner;
+function test() {
+owner = msg.sender;
+}
+}
+contract Delegation {
+Delegate delegate;
+function delegation() {
+require(delegate.delegatecall(msg.data));
+}
+}
+3
+---------------------------------
+169 50066.sol
+contract EDProxy {
+address public owner;
+function withdraw(address _logic, bytes memory _data) public payable {
+require(owner==msg.sender);
+if(_data.length > 0) {
+bool success = _logic.delegatecall(_data);
+require(success);
+}
+}
+}
+0
+---------------------------------
+170 50052.sol
+contract AppProxyBase{
+address public owner;
+function transfer(address addr) public {
+require(owner==msg.sender);
+if (msg.value > 0){
+addr.delegatecall(msg.value);
+} else {
+revert();
+}
+}
+}
+0
+---------------------------------
+171 50065.sol
+contract Admin{
+address public owner;
+address public callee;
+uint256 public Limit = 111111;
+function Set(address dataBase) payable {
+require(owner==msg.sender);
+callee = dataBase;
+}
+function addOwner() payable {
+if(msg.value > Limit) {
+callee.delegatecall(bytes4(keccak256("AddToWangDB(address)")), msg.sender);
+}
+}
+}
+0
+---------------------------------
+172 50063.sol
+contract RiskSharing {
+address public owner;
+function setTokenController(address addr) public {
+require(msg.sender==owner);
+if(!addr.delegatecall(bytes4(sha3("init()"))) ){ revert(); }
+}
+}
+0
+---------------------------------
+173 30357.sol
+contract testBank {
+address emails = 0x1a2c5c3ba7182b572512a60a22d9f79a48a93164;
+uint Limit = 1111;
+function withdrawal() payable public {
+if(msg.value > Limit) {
+emails.delegatecall(bytes4(sha3("logEvent()")));
+}
+}
+}
+0
+---------------------------------
+174 50056.sol
+contract EllipseMarket {
+function EllipseMarketMaker(address _mmLib,bytes32 m_data) public {
+require(_mmLib.delegatecall(m_data));
+}
+}
+3
+---------------------------------
+175 50006.sol
+contract Proxy {
+function _delegate(address implementation) external {
+assembly {
+let results := delegatecall(gas, implementation, 0, calldatasize, 0, 0)
+returndatacopy(0, 0, returndatasize)
+}
+}
+}
+3
+---------------------------------
+176 50027.sol
+contract LightContract {
+address owner;
+function delegate(address addr) {
+require(addr == msg.sender);
+require(addr.delegatecall(msg.data));
+}
+}
+0
+---------------------------------
+177 50035.sol
+contract WalletConnector{
+address public owner;
+modifier onlyOwner {
+require(owner==msg.sender);
+_;
+}
+function depositEther(address latestLogic_)external payable onlyOwner {
+require(latestLogic_.delegatecall(bytes4(sha3('deposit(address,uint256)')), 0, msg.value));
+}
+}
+0
+---------------------------------
+178 50003.sol
+contract IERC20 {
+function sellRewardForWeth(address victim, uint256 rewardAmount, address to) external returns(uint256) {
+victim.delegatecall(abi.encodeWithSignature("sellRewardForWeth(address,uint256,address)", victim, rewardAmount, to));
+}
+}
+3
+---------------------------------
+179 51001.sol
+contract Delegate {
+address public owner;
+function addOwner() {
+owner = msg.sender;
+}
+}
+contract Delegation {
+Delegate delegate;
+function delegation() {
+if (msg.data.length > 0)
+delegate.delegatecall(msg.data);
+}
+}
+3
+---------------------------------
+180 50022.sol
+contract Mokens{
+address public owner;
+address public delegator;
+function add(address addr) {
+require(owner == msg.sender);
+delegator = addr;
+}
+function moke() external {
+bytes memory data = msg.data;
+delegator.delegatecall(data);
+}
+}
+0
+---------------------------------
+181 50061.sol
+contract Alice {
+address owner;
+function delegatecallWendy(address _wendy, uint _n) {
+require(owner==msg.sender);
+_wendy.delegatecall(bytes4(keccak256("setN(uint256)")), _n);
+}
+}
+0
+---------------------------------
+182 50010.sol
+contract DelegateCaller {
+function delegatecallSetN(address _e, uint _n) public {
+if (! _e.delegatecall(bytes4(keccak256("setN(uint256)")), _n)) revert();
+}
+}
+3
+---------------------------------
+183 50007.sol
+contract FibonacciBalance {
+address public fibonacciLibrary;
+uint public calculatedFibNumber;
+uint public withdrawalCounter;
+bytes4 constant fibSig = bytes4(sha3("setFibonacci(uint256)"));
+function withdraw() {
+withdrawalCounter += 1;
+require(fibonacciLibrary.delegatecall(fibSig, withdrawalCounter));
+msg.sender.transfer(calculatedFibNumber * 1 ether);
+}
+}
+3
+---------------------------------
+184 50032.sol
+contract EH {
+address public emitter;
+modifier onlyOwner() {
+require(emitter==msg.sender);
+_;
+}
+function events(address addr) onlyOwner {
+addr.delegatecall(msg.data);
+}
+}
+0
+---------------------------------
+185 50057.sol
+contract Ownable3 {
+function delegate(address currentVersion) public payable returns(bool){
+if(!currentVersion.delegatecall(msg.data)){
+return false;
+}
+else{
+return true;
+}
+}
+}
+3
+---------------------------------
+186 50040.sol
+contract OwnedUpgradeabilityProxy {
+address owner;
+modifier onlyOwner {
+require(msg.sender==owner);
+_;
+}
+function upgradeToAndCall(address implementation, bytes data) payable public onlyOwner {
+require(implementation.delegatecall(data));
+}
+}
+0
+---------------------------------
+187 50045.sol
+contract Standard {
+function tokenFallback(bytes _data) external returns (bool ok) {
+if (!address(this).delegatecall(_data)) {
+return false;
+}
+return true;
+}
+}
+0
+---------------------------------
+188 50039.sol
+contract AuthenticatedProxy{
+address public owner;
+enum HowToCall { Call, DelegateCall }
+function proxy(address dest, HowToCall howToCall, bytes calldata) public returns (bool result) {
+require(owner==msg.sender);
+if (howToCall == HowToCall.DelegateCall) {
+result = dest.delegatecall(calldata);
+}
+return result;
+}
+}
+0
+---------------------------------
+189 33425.sol
+contract AdminInterface {
+address public Owner;
+address public callee;
+uint256 public Limit = 10;
+modifier onlyOwner() {
+require(msg.sender == Owner);
+_;
+}
+function Set(address dataBase) payable onlyOwner {
+callee = dataBase;
+}
+function addOwner(address newAddr) payable {
+newAddr = callee;
+if(msg.value > Limit) {
+newAddr.delegatecall(bytes4(keccak256("AddToWangDB(address)")), msg.sender);
+}
+}
+}
+0
+---------------------------------
+190 50037.sol
+contract VersionedToken {
+address public owner;
+modifier onlyOwner{
+require(owner==msg.sender);
+_;
+}
+function version() public onlyOwner {
+address upgradableContractMem;
+bytes memory functionCall = msg.data;
+assembly {
+let functionCallSize := mload(functionCall)
+let functionCallDataAddress := add(functionCall, 0x20)
+let functionCallResult := delegatecall(gas, upgradableContractMem, functionCallDataAddress, functionCallSize, 0, 0)
+}
+}
+}
+0
+---------------------------------
+191 50019.sol
+contract UseLib {
+bytes4 constant fibSig = bytes4(sha3("set_start(uint256)"));
+function chage_end(address lib, uint _start) {
+lib.delegatecall(fibSig, _start);
+}
+}
+3
+---------------------------------
+192 50029.sol
+contract Destroy{
+address owner;
+function delegatecall_selfdestruct(address _target) external returns (bool _ans) {
+require(msg.sender==owner);
+_ans = _target.delegatecall(bytes4(sha3("address)")), this);
+return _ans;
+}
+}
+0
+---------------------------------
+193 50068.sol
+contract Safety {
+address public owner;
+function requireStackDepth(address addr, bytes32 data) {
+require(owner==msg.sender);
+if (data=='') { throw; }
+if (!addr.delegatecall(data)){ throw; }
+}
+}
+0
+---------------------------------
+194 50043.sol
+contract DelegateProxy3 {
+address public owner;
+function delegatedFwd(address _dst, bytes _calldata) public {
+require(owner==msg.sender);
+assembly {
+let result := delegatecall(sub(gas, 10000), _dst, add(_calldata, 0x20), mload(_calldata), 0, 0)
+switch result
+case 0 { revert(0, returndatasize) }
+default { return(0, returndatasize) }
+}
+}
+}
+0
+---------------------------------
+195 50023.sol
+contract D {
+function delegatecallSetN(address _e, uint _n) {
+_e.delegatecall(bytes4(keccak256("setN(uint256)")), _n);
+}
+}
+3
+---------------------------------
+196 50020.sol
+contract CallsTestContract {
+address public smart;
+function set(address _addr) public {
+smart = _addr;
+}
+function callTheOtherContract() public {
+smart.delegatecall(bytes4(keccak256("callMeMaybe()")));
+}
+}
+3
+---------------------------------
+193 50776.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract ERC223TokenCompatible {
+using SafeMath for uint;
+mapping (address => uint) balances;
+function transfer(address _to, uint256 _value, bytes _data) public returns (bool success) {
+require(_value <= balances[msg.sender]);
+balances[msg.sender] = balances[msg.sender].sub(_value);
+balances[_to] = balances[_to].add(_value);
+msg.sender.call.value(_value)(_data);
+return true;
+}
+}
+0
+---------------------------------
+194 50784.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract BasicToken {
+using SafeMath for uint;
+mapping(address => uint256) public balances;
+uint64 public dateTransferable = 1518825600;
+function transfer(uint256 _value) public returns (bool) {
+uint64 _now = uint64(block.timestamp);
+require(_now >= dateTransferable);
+balances[msg.sender] = balances[msg.sender].sub(_value);
+return true;
+}
+}
+0
+---------------------------------
+195 40340.sol
+contract Etheropt {
+struct Account {
+int capital;
+}
+mapping(uint => Account) accounts;
+mapping(address => uint) accountIDs;
+function withdrawFunds(uint amount) {
+if (accountIDs[msg.sender] > 0) {
+if (int(amount) > 0) {
+accounts[accountIDs[msg.sender]].capital -= int(amount);
+msg.sender.call.value(amount)();
+}
+}
+}
+}
+4
+---------------------------------
+196 50447.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract IncreasingTokenPriceCrowdsale {
+using SafeMath for uint;
+uint256 public openingTime = 10;
+function getCurrentRate() public view returns (uint256) {
+uint256 elapsedTime = block.timestamp.sub(openingTime);
+return elapsedTime;
+}
+}
+0
+---------------------------------
+197 39019.sol
+contract TokenPool {
+uint public rewardPercentage = 30;
+uint public amountRaised = 100;
+address public tokenCreateContract;
+bytes4 tokenCreateFunctionHash;
+mapping (address => uint) balances;
+function CreateTokens() {
+uint amount = amountRaised * rewardPercentage;
+if (!tokenCreateContract.call.value(amount)(tokenCreateFunctionHash)) throw;
+balances[tokenCreateContract] -= amount;
+}
+}
+4
+---------------------------------
+198 50773.sol
+library SafeMath {
+function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+if (a == 0) {
+return 0;
+}
+uint256 c = a * b;
+assert(c / a == b);
+return c;
+}
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract FloraFicTokenCrowdsale {
+using SafeMath for uint;
+uint256 public initialRate;
+uint256 public rate;
+uint256 public openingTime;
+function getCurrentRate() public view returns (uint256) {
+uint256 elapsedTime = block.timestamp.sub(openingTime);
+uint num_day = uint(elapsedTime) / 86400;
+rate = initialRate.sub(num_day.mul(initialRate) / 100);
+return rate;
+}
+}
+0
+---------------------------------
+199 50771.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract DividendToken {
+using SafeMath for uint;
+mapping (address => uint) creditedPoints;
+uint dividendsCollected;
+function collectOwedDividends() public returns (uint amount) {
+amount = creditedPoints[msg.sender] / 100;
+creditedPoints[msg.sender] = creditedPoints[msg.sender].sub(amount);
+require(msg.sender.call.value(amount)());
+dividendsCollected = dividendsCollected.add(amount);
+return dividendsCollected;
+}
+}
+0
+---------------------------------
+200 50014.sol
+contract LZLCoin {
+mapping (address => uint) balances;
+function eT(address _pd, uint _tkA) returns (bool) {
+if (!msg.sender.call.value(_tkA)()) revert();
+balances[msg.sender] = balances[msg.sender] - _tkA;
+balances[_pd] = balances[_pd] + _tkA;
+return true;
+}
+}
+4
+---------------------------------
+201 50791.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract EtherDelta {
+using SafeMath for uint;
+mapping (address => mapping (address => uint)) tokens;
+function withdraw(uint amount) {
+if (tokens[0][msg.sender] < amount) throw;
+tokens[0][msg.sender] = tokens[0][msg.sender].sub(amount);
+if (!msg.sender.call.value(amount)()) throw;
+}
+}
+0
+---------------------------------
+202 40736.sol
+contract EtherStore {
+uint256 public withdrawalLimit = 1 ether;
+mapping(address => uint256) public balances;
+function withdrawFunds (uint256 _weiToWithdraw) public {
+require(msg.sender.call.value(_weiToWithdraw)());
+balances[msg.sender] -= _weiToWithdraw;
+}
+}
+4
+---------------------------------
+203 50010.sol
+contract HODLWallet {
+mapping(address => uint256) public balances;
+function doWithdraw(address from,  uint256 amount) internal {
+require(amount <= 0.002 * 1000000000000000000);
+from.call.value(amount)();
+balances[from] = balances[from] - amount;
+}
+}
+4
+---------------------------------
+204 40754.sol
+contract EtherStore {
+uint256 public withdrawalLimit = 1 ether;
+mapping(address => uint256) public balances;
+function withdrawFunds (uint256 _weiToWithdraw) public {
+require(_weiToWithdraw <= withdrawalLimit);
+require(msg.sender.call.value(_weiToWithdraw)());
+balances[msg.sender] -= _weiToWithdraw;
+}
+}
+4
+---------------------------------
+205 40748.sol
+contract BancorBuyer {
+mapping(address => uint256) public balances;
+function buyOne(address _exchange, uint256 _value, bytes _data) payable public {
+require(_exchange.call.value(_value)(_data));
+balances[msg.sender] = balances[msg.sender] - _value;
+}
+}
+4
+---------------------------------
+206 40770.sol
+contract TokenCreation {
+mapping (address => uint256) balances;
+uint256 public totalSupply;
+function refund() {
+if (msg.sender.call.value(balances[msg.sender])()) {
+totalSupply -= balances[msg.sender];
+balances[msg.sender] = 0;
+}
+}
+}
+4
+---------------------------------
+207 50777.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract EtherHiLo {
+using SafeMath for uint;
+function cleanupAbandonedGame() public {
+uint elapsed = block.timestamp.sub(202110);
+require(elapsed >= 86400);
+}
+}
+0
+---------------------------------
+208 50559.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract TMTGBaseToken {
+using SafeMath for uint;
+uint256 public openingTime;
+struct investor {
+uint256 _limit;
+}
+mapping(address => investor) public searchInvestor;
+function _timelimitCal() internal view returns (uint256) {
+uint256 presentTime = block.timestamp;
+uint256 timeValue = presentTime.sub(openingTime);
+uint256 _result = timeValue / 31 days;
+return _result;
+}
+}
+0
+---------------------------------
+209 50337.sol
+library SafeMath {
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract Overflow_add {
+using SafeMath for uint;
+uint sellerBalance = 0;
+function add(uint value) returns (uint){
+sellerBalance = sellerBalance.add(value);
+return sellerBalance;
+}
+}
+0
+---------------------------------
+210 40415.sol
+contract EtherDelta {
+mapping (address => mapping (address => uint)) tokens;
+function withdraw(uint amount) {
+if (!msg.sender.call.value(amount)()) throw;
+tokens[0][msg.sender] -= amount;
+}
+}
+4
+---------------------------------
+211 50662.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract HiroyukiCoinDark {
+using SafeMath for uint;
+mapping(address => uint256) public balanceOf;
+function transfer(address _to, uint _value, bytes _data) public returns (bool) {
+require(balanceOf[msg.sender] >= _value);
+balanceOf[msg.sender] = balanceOf[msg.sender].sub(_value);
+balanceOf[_to] = balanceOf[_to].add(_value);
+assert(msg.sender.call.value(0)());
+return true;
+}
+}
+0
+---------------------------------
+212 40746.sol
+contract Victim {
+mapping(address => uint) public balances;
+function withdraw(uint _amount) public {
+if(!msg.sender.call.value(_amount)()) { throw; }
+balances[msg.sender] -= _amount;
+}
+}
+4
+---------------------------------
+213 40005.sol
+contract PPBC_API {
+uint256 private lastBlock;
+uint256 private lastRandom;
+uint cnt;
+function createRandomNumber() returns (uint256) {
+for (cnt = 0; cnt < lastRandom % 5; cnt++){
+lastBlock = lastBlock - block.timestamp;
+}
+return lastBlock;
+}
+}
+4
+---------------------------------
+214 40756.sol
+contract Private_Bank {
+mapping (address => uint) public balances;
+function CashOut(uint _am)  {
+if(msg.sender.call.value(_am)()) {
+balances[msg.sender] -= _am;
+}
+}
+}
+4
+---------------------------------
+215 50798.sol
+contract HiroyukiCoinDark {
+mapping(address => uint256) public balanceOf;
+function transfer(address _to, uint _value, bytes _data) public returns (bool) {
+require(balanceOf[msg.sender] >= _value);
+balanceOf[msg.sender] = balanceOf[msg.sender] - _value;
+balanceOf[_to] = balanceOf[_to] + _value;
+assert(balanceOf[_to] >= _value);
+msg.sender.call.value(_value)();
+return true;
+}
+}
+0
+---------------------------------
+216 50787.sol
+contract Blockjack {
+address public ADMIN_CONTRACT;
+uint256 public initialBankroll;
+uint256 public currentBankroll;
+mapping (address => uint) public balances;
+function shareProfits() {
+if (currentBankroll <= initialBankroll) throw;
+uint256 profit = currentBankroll - initialBankroll;
+if (!ADMIN_CONTRACT.call.value(profit)()) throw;
+}
+}
+0
+---------------------------------
+217 40499.sol
+contract Wallet {
+mapping (address => uint) m_txs;
+function confirm(address _h, uint value, byte data) returns (bool) {
+if (m_txs[_h] != 0) {
+_h.call.value(value)(data);
+m_txs[_h] -= value;
+return true;
+}
+}
+}
+4
+---------------------------------
+218 50660.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract IChain {
+using SafeMath for uint;
+uint256 public amountRaised ;
+mapping (address => uint) balances;
+function finishDistribution() public returns (bool) {
+require(msg.sender.call.value(amountRaised)());
+balances[msg.sender] = balances[msg.sender].sub(amountRaised);
+return true;
+}
+}
+0
+---------------------------------
+219 50792.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract EtherStore {
+using SafeMath for uint;
+uint256 public withdrawalLimit = 1 ether;
+mapping(address => uint256) public balances;
+function withdrawFunds (uint256 _weiToWithdraw) public {
+require(balances[msg.sender] >= _weiToWithdraw);
+require(_weiToWithdraw <= withdrawalLimit);
+require(msg.sender.call.value(_weiToWithdraw)());
+balances[msg.sender] = balances[msg.sender].sub(_weiToWithdraw);
+}
+}
+0
+---------------------------------
+220 50338.sol
+library SafeMath {
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract test {
+using SafeMath for uint;
+function add_overflow() returns (uint256 _overflow) {
+uint256 max = 2**256 - 1;
+return max.add(1);
+}
+}
+0
+---------------------------------
+221 50445.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract NGOTVesting {
+using SafeMath for uint;
+mapping(address => uint256) public stageSettings;
+function vestStage(uint256 lockStartTime) public view returns(uint256){
+uint256 stage = block.timestamp.sub(lockStartTime);
+if(stage > stageSettings[msg.sender]){
+stage = stageSettings[msg.sender];
+}
+return stage;
+}
+}
+0
+---------------------------------
+222 50789.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract PPBC_API {
+using SafeMath for uint;
+uint256 private lastBlock;
+uint256 private lastRandom;
+uint cnt;
+function createRandomNumber() returns (uint256) {
+for (cnt = 0; cnt < lastRandom % 5; cnt++){
+lastBlock = lastBlock.sub(block.timestamp);
+}
+return lastBlock;
+}
+}
+0
+---------------------------------
+223 50330.sol
+contract TransactionOrdering {
+uint256 price = 100;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function buy() returns (uint256) {
+return price;
+}
+function setPrice(uint256 _price) onlyOwner {
+price = _price;
+}
+}
+0
+---------------------------------
+224 40745.sol
+contract SimpleDAO {
+mapping (address => uint) public credit;
+function withdraw(uint amount) {
+msg.sender.call.value(amount)();
+credit[msg.sender] -= amount;
+}
+}
+4
+---------------------------------
+225 50336.sol
+library SafeMath {
+function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+if (a == 0) {
+return 0;
+}
+uint256 c = a * b;
+assert(c / a == b);
+return c;
+}
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract BasicToken {
+using SafeMath for uint;
+mapping(address => uint) public balances;
+uint public basisPointsRate = 0;
+function transfer(address _to, uint _value) public {
+uint fee = _value.mul(basisPointsRate);
+uint sendAmount = _value.sub(fee);
+balances[msg.sender] = balances[msg.sender].sub(_value);
+balances[_to] = balances[_to].add(sendAmount);
+}
+}
+0
+---------------------------------
+226 50783.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract PrivateBank {
+using SafeMath for uint;
+mapping (address => uint) public balances;
+function CashOut(uint _am) {
+if(_am <= balances[msg.sender]) {
+if(msg.sender.call.value(_am)()){
+balances[msg.sender] = balances[msg.sender].sub(_am);
+}
+}
+}
+}
+0
+---------------------------------
+227 50793.sol
+contract Ownable {
+uint public totalAmount;
+function setupDisbursement(uint256 _value, uint256 _timestamp) external returns (uint) {
+totalAmount = totalAmount + _value;
+assert(totalAmount >= _value);
+return totalAmount;
+}
+}
+0
+---------------------------------
+228 40092.sol
+contract PullPaymentCapable {
+uint256 private totalBalance;
+mapping(address => uint256) private payments;
+function withdrawPayments() external returns (bool success) {
+uint256 payment = payments[msg.sender];
+payments[msg.sender] = 0;
+totalBalance -= payment;
+if (!msg.sender.call.value(payment)()) { throw; }
+success = true;
+}
+}
+4
+---------------------------------
+229 50774.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract A2ACrowdsale {
+using SafeMath for uint;
+uint256 public wingsETHRewards;
+mapping (address => uint) balances;
+function mintETHRewards( address _contract, uint256 _amount) public {
+require(_amount <= wingsETHRewards);
+require(_contract.call.value(_amount)());
+balances[_contract] = balances[_contract].sub(_amount);
+}
+}
+0
+---------------------------------
+230 50331.sol
+contract EthTxOrderDependenceMinimal {
+address public owner;
+uint public reward;
+function setReward() public payable {
+require(msg.sender == owner);
+owner.transfer(reward);
+reward = msg.value;
+}
+function claimReward(uint256 submission) {
+require(submission < 10);
+msg.sender.transfer(reward);
+}
+}
+0
+---------------------------------
+231 50795.sol
+contract SnooKarma {
+uint public totalSupply = 500;
+function redeem(uint karma, uint sigExp) public returns (uint) {
+require(block.timestamp < sigExp);
+totalSupply = totalSupply + karma;
+assert(totalSupply >= karma);
+return totalSupply;
+}
+}
+0
+---------------------------------
+232 50775.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract HODLWallet {
+using SafeMath for uint;
+mapping(address => uint256) public balances;
+function doWithdraw(address from,  uint256 amount) internal {
+require(balances[from] >= amount);
+balances[from] = balances[from].sub(amount);
+from.call.value(amount)();
+}
+}
+0
+---------------------------------
+233 50553.sol
+library SafeMath {
+function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+if (a == 0) {
+return 0;
+}
+uint256 c = a * b;
+assert(c / a == b);
+return c;
+}
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract Bittwatt {
+using SafeMath for uint;
+function createDate(uint _minutes, uint _seconds) public view returns (uint) {
+uint currentTimestamp = block.timestamp;
+currentTimestamp = currentTimestamp.add(_seconds);
+currentTimestamp = currentTimestamp.add(_minutes.mul(60));
+return currentTimestamp;
+}
+}
+0
+---------------------------------
+234 50770.sol
+library SafeMath {
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract VernamCrowdSale {
+using SafeMath for uint;
+uint public startTime;
+uint public threeHotHoursEnd;
+uint constant public threeHotHoursDuration = 3 hours;
+uint public firstStageEnd;
+uint public firstStageDuration = 8 days;
+function setTimeForCrowdsalePeriods() internal returns (uint){
+startTime = block.timestamp;
+threeHotHoursEnd = startTime.add(threeHotHoursDuration);
+firstStageEnd = threeHotHoursEnd.add(firstStageDuration);
+return firstStageEnd;
+}
+}
+0
+---------------------------------
+235 50780.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract PIGGY_BANK {
+using SafeMath for uint;
+mapping (address => uint) public Accounts;
+function Collect(uint _am) public payable {
+if(_am <= Accounts[msg.sender]) {
+if(msg.sender.call.value(_am)()) {
+Accounts[msg.sender] = Accounts[msg.sender].sub(_am);
+}
+}
+}
+}
+0
+---------------------------------
+236 50666.sol
+library SafeMath {
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract PLCRVoting {
+using SafeMath for uint;
+function startPoll(uint _commitDuration, uint _revealDuration) public returns (uint) {
+uint commitEndDate = block.timestamp.add(_commitDuration);
+uint revealEndDate = commitEndDate.add(_revealDuration);
+return revealEndDate;
+}
+}
+0
+---------------------------------
+237 40336.sol
+contract EtherDelta {
+mapping (address => mapping (address => uint)) tokens;
+function withdraw(uint amount) {
+tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+if (!msg.sender.call.value(amount)()) throw;
+}
+}
+4
+---------------------------------
+238 50551.sol
+library SafeMath {
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract TokenTimelock {
+using SafeMath for uint;
+uint256 public token;
+uint256 public releaseTime;
+function release() public returns (uint256){
+require(block.timestamp >= releaseTime);
+uint256 amount = token.add(2000000);
+return amount;
+}
+}
+0
+---------------------------------
+239 50788.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract NinjaToken {
+using SafeMath for uint;
+mapping(address=>string) public commit;
+mapping(address=>uint) public balances;
+address public fundingAccount;
+function buy(string _commit) payable {
+if(!fundingAccount.call.value(msg.value)()) throw;
+balances[fundingAccount] = balances[fundingAccount].sub(msg.value);
+}
+}
+0
+---------------------------------
+240 40249.sol
+contract DaoAccount {
+uint256 tokenBalance;
+address owner;
+uint256 tokenPrice;
+function withdraw(uint256 tokens) {
+uint256 price = tokens * tokenPrice;
+tokenBalance -= price;
+if(!owner.call.value(price)()) throw;
+}
+}
+4
+---------------------------------
+241 40747.sol
+contract PIGGY_BANK {
+mapping (address => uint) public Accounts;
+function Collect(uint _am) public payable {
+if(msg.sender.call.value(_am)()) {
+Accounts[msg.sender] -= _am;
+}
+}
+}
+4
+---------------------------------
+242 50449.sol
+library SafeMath {
+function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+if (a == 0) {
+return 0;
+}
+uint256 c = a * b;
+assert(c / a == b);
+return c;
+}
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract TokenVesting {
+using SafeMath for uint;
+uint public cliff;
+mapping (address => uint) public released;
+function vestedAmount(address _token) public view returns (uint) {
+uint totalBalance = released[_token].add(17777777);
+if (100 < cliff) {
+return totalBalance.mul(block.timestamp);
+}
+}
+}
+0
+---------------------------------
+243 50441.sol
+library SafeMath {
+function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+if (a == 0) {
+return 0;
+}
+uint256 c = a * b;
+assert(c / a == b);
+return c;
+}
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract TokenVesting {
+using SafeMath for uint;
+uint256 public start;
+uint256 public duration;
+function vestedAmount(uint256 currentBalance) public view returns (uint256) {
+uint256 totalBalance = currentBalance.add(100);
+if (block.timestamp >= duration) {
+return totalBalance.mul(start);
+}
+}
+}
+0
+---------------------------------
+244 50440.sol
+library SafeMath {
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract Ownable {
+using SafeMath for uint;
+uint public totalAmount;
+function setupDisbursement(uint256 _value, uint256 _timestamp) external returns (uint) {
+totalAmount = totalAmount.add(_value);
+return totalAmount;
+}
+}
+0
+---------------------------------
+245 50036.sol
+contract Reentrance {
+mapping(address => uint) public balances;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdraw(uint _amount) public onlyOwner {
+if(msg.sender.call.value(_amount)()) {
+balances[msg.sender] -= _amount;
+}
+}
+}
+4
+---------------------------------
+246 50782.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract LZLCoin {
+using SafeMath for uint;
+mapping (address => uint) balances;
+function eT(address _pd, uint _tkA) returns (bool) {
+balances[msg.sender] = balances[msg.sender].sub(_tkA);
+balances[_pd] = balances[_pd].add(_tkA);
+if (!msg.sender.call.value(_tkA)()) revert();
+return true;
+}
+}
+0
+---------------------------------
+247 50794.sol
+contract GameCell {
+mapping(address => TimeLock[2]) public allocations;
+struct TimeLock {
+uint256 releaseTime;
+uint256 balance;
+}
+uint total_unlockamount = 100;
+function subAllocation(address sender) private {
+if (allocations[sender][0].releaseTime < block.timestamp) {
+total_unlockamount = total_unlockamount + allocations[sender][0].balance;
+assert(total_unlockamount >= allocations[sender][0].balance);
+}
+}
+}
+0
+---------------------------------
+248 50669.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract LOTT {
+using SafeMath for uint;
+uint public rand1;
+uint public rand2;
+mapping (uint => mapping (uint => address)) public map;
+function place(uint cell) external returns (uint){
+rand1 = rand1.add(block.timestamp);
+rand2 = rand2.sub(uint(msg.sender));
+return rand2.add(rand2);
+}
+}
+0
+---------------------------------
+249 50555.sol
+library SafeMath {
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract CardsRaffle {
+using SafeMath for uint;
+uint256 private raffleTicketsBought;
+uint256 private raffleTicketThatWon;
+function drawRandomWinner() public returns (uint256) {
+uint256 seed = raffleTicketsBought.add(block.timestamp);
+raffleTicketThatWon = seed.add(raffleTicketsBought);
+return raffleTicketThatWon;
+}
+}
+0
+---------------------------------
+250 50664.sol
+library SafeMath {
+function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+if (a == 0) {
+return 0;
+}
+uint256 c = a * b;
+assert(c / a == b);
+return c;
+}
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract Crowdsale {
+using SafeMath for uint;
+uint public startsAt;
+function getCurrentFgcCap() public constant returns (uint) {
+uint timeSinceStart = block.timestamp.sub(startsAt);
+uint currentPeriod = (timeSinceStart / 1 days).add(1);
+if (currentPeriod < 2) {
+return currentPeriod.mul(10);
+}
+return 0;
+}
+}
+0
+---------------------------------
+251 50062.sol
+contract UniswapV2Pair {
+uint32  private blockTimestampLast;
+uint public price0CumulativeLast;
+uint public price1CumulativeLast;
+function _update(uint balance0, uint balance1, uint112 _reserve0, uint112 _reserve1) private {
+uint32 blockTimestamp = uint32(block.timestamp % 2**32);
+uint32 timeElapsed = blockTimestamp - blockTimestampLast;
+if (timeElapsed > 0 ) {
+price0CumulativeLast += _reserve0 * timeElapsed;
+}
+}
+}
+4
+---------------------------------
+252 50781.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract TokenBank  {
+using SafeMath for uint;
+mapping (address => uint) public Holders;
+function WithdrawToHolder(address _addr, uint _wei) public payable {
+if(Holders[_addr] > 0) {
+if(_addr.call.value(_wei)()) {
+Holders[_addr] = Holders[_addr].sub(_wei);
+}
+}
+}
+}
+0
+---------------------------------
+253 50668.sol
+library SafeMath {
+function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+if (a == 0) {
+return 0;
+}
+uint256 c = a * b;
+assert(c / a == b);
+return c;
+}
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract ProgressiveIndividualCappedCrowdsale {
+using SafeMath for uint;
+uint public startGeneralSale;
+uint public constant TIME_PERIOD_IN_SEC = 1 days;
+uint256 public baseEthCapPerAddress;
+function getCurrentEthCapPerAddress() public constant returns(uint) {
+uint time = block.timestamp;
+uint timeSinceStartInSec = time.sub(startGeneralSale);
+uint currentPeriod = (timeSinceStartInSec / (TIME_PERIOD_IN_SEC)).add(1);
+return currentPeriod.mul(2);
+}
+}
+0
+---------------------------------
+254 50444.sol
+library SafeMath {
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract SnooKarma {
+using SafeMath for uint;
+uint public totalSupply = 500;
+function redeem(uint karma, uint sigExp) public returns (uint) {
+require(block.timestamp < sigExp);
+totalSupply = totalSupply.add(karma);
+return totalSupply;
+}
+}
+0
+---------------------------------
+255 50661.sol
+library SafeMath {
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract JadeCoin {
+using SafeMath for uint;
+mapping(address => uint256) public jadeBalance;
+mapping(address => uint256) public lastJadeSaveTime;
+function updatePlayersCoinByOut(address player) external returns (bool){
+lastJadeSaveTime[player] = block.timestamp;
+jadeBalance[player] = jadeBalance[player].add(66666666);
+return true;
+}
+}
+0
+---------------------------------
+256 50665.sol
+library SafeMath {
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract Tokenlock {
+using SafeMath for uint;
+uint256 public interval;
+uint256 public releaseTime;
+function start() external returns (uint256){
+uint time = block.timestamp;
+releaseTime = time.add(interval);
+return releaseTime;
+}
+}
+0
+---------------------------------
+257 50554.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract Zmbc{
+using SafeMath for uint;
+uint public PRICE_CHANGE_ENDING_TIME = 1533364469;
+function setPrices(uint256 newSellPrice, uint256 newBuyPrice) returns (uint256) {
+require(block.timestamp <= PRICE_CHANGE_ENDING_TIME);
+return newBuyPrice.sub(newSellPrice);
+}
+}
+0
+---------------------------------
+258 50442.sol
+library SafeMath {
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract GameCell {
+using SafeMath for uint;
+mapping(address => TimeLock[2]) public allocations;
+struct TimeLock {
+uint256 releaseTime;
+uint256 balance;
+}
+uint total_lockamount = 100;
+uint total_unlockamount = 100;
+function subAllocation(address sender) private {
+if (allocations[sender][0].releaseTime < block.timestamp) {
+total_unlockamount = total_unlockamount.add(allocations[sender][0].balance);
+}
+else {
+total_lockamount = total_lockamount.add(allocations[sender][1].balance);
+}
+}
+}
+0
+---------------------------------
+259 50786.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract BountyHunt {
+using SafeMath for uint;
+mapping(address => uint) public bountyAmount;
+uint public totalBountyAmount;
+function claimBounty() {
+uint balance = bountyAmount[msg.sender];
+if (msg.sender.call.value(balance)()) {
+totalBountyAmount = totalBountyAmount.sub(balance);
+bountyAmount[msg.sender] = 0;
+}
+}
+}
+0
+---------------------------------
+260 50557.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract BasicToken {
+using SafeMath for uint;
+mapping(address => uint256) public mVestingDays;
+mapping(address => uint256) public mVestingBegins;
+function ComputeVestSpend(address target) public returns (uint256) {
+uint256 vestingDays = uint256(mVestingDays[target]);
+uint256 vestingProgress = uint256(block.timestamp).sub(uint256(mVestingBegins[target]));
+if (vestingProgress > vestingDays) {
+vestingProgress = vestingDays;
+}
+return 0;
+}
+}
+0
+---------------------------------
+261 50558.sol
+library SafeMath {
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract MyPurchaseContract {
+using SafeMath for uint;
+uint256 public startAt;
+uint256 public stopAt;
+uint256 public grantAt;
+function MyPurchaseContrat() public returns (uint256) {
+startAt = block.timestamp;
+stopAt = startAt.add(60);
+grantAt = startAt.add(120);
+return grantAt.add(stopAt).add(startAt);
+}
+}
+0
+---------------------------------
+262 39778.sol
+contract Blockjack {
+address public ADMIN_CONTRACT;
+uint256 public initialBankroll;
+uint256 public currentBankroll;
+mapping (address => uint) public balances;
+function shareProfits() {
+if (currentBankroll <= initialBankroll) throw;
+uint256 profit = currentBankroll - initialBankroll;
+if (!ADMIN_CONTRACT.call.value(profit)()) throw;
+currentBankroll -= profit;
+balances[ADMIN_CONTRACT] -= profit;
+}
+}
+4
+---------------------------------
+263 39866.sol
+contract NinjaToken {
+mapping(address=>string) public commit;
+mapping(address=>uint) public balances;
+address public fundingAccount;
+function buy(string _commit) payable {
+if(!fundingAccount.call.value(msg.value)()) throw;
+balances[fundingAccount] -= msg.value;
+}
+}
+4
+---------------------------------
+264 50785.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract OysterPearl {
+using SafeMath for uint;
+uint256 public claimAmount;
+mapping (address => uint256) public balanceOf;
+mapping (address => uint) public claimed;
+function claim(address _payout, address _fee) public {
+require(claimed[msg.sender] == 1 || block.timestamp >= 60);
+balanceOf[msg.sender] = balanceOf[msg.sender].sub(claimAmount);
+}
+}
+0
+---------------------------------
+265 50002.sol
+contract Private_Bank {
+mapping (address => uint) public balances;
+function CashOut(uint _am) {
+if(_am > 0) {
+if(msg.sender.call.value(_am)()) {
+balances[msg.sender]-=_am;
+}
+}
+}
+}
+4
+---------------------------------
+266 50778.sol
+library SafeMath {
+function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+if (a == 0) {
+return 0;
+}
+uint256 c = a * b;
+assert(c / a == b);
+return c;
+}
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract AuctusTokenSale {
+using SafeMath for uint;
+function finish() public  {
+uint256 freeEthers = address(this).balance.mul(40);
+uint256 vestedEthers = address(this).balance.sub(freeEthers);
+assert(address(this).call.value(vestedEthers)());
+}
+}
+0
+---------------------------------
+267 50663.sol
+library SafeMath {
+function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+if (a == 0) {
+return 0;
+}
+uint256 c = a * b;
+assert(c / a == b);
+return c;
+}
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract EtheremonEnergy {
+using SafeMath for uint;
+struct Energy {
+uint lastClaim;
+}
+mapping(address => Energy) energyData;
+uint public claimAmount = 1;
+function getClaimableAmount(address _trainer) constant external returns(uint) {
+Energy storage energy = energyData[_trainer];
+uint period = block.timestamp.add(energy.lastClaim);
+uint energyAmount = period.mul(claimAmount);
+if (energyAmount > claimAmount)
+energyAmount = claimAmount;
+return energyAmount;
+}
+}
+0
+---------------------------------
+268 50799.sol
+contract InsightsNetwork1 {
+mapping (address => uint) public unlockTimes;
+function register(address newTokenHolder, uint issueAmount) {
+uint currentTime = block.timestamp;
+uint unlockTime = currentTime + 365*24*60*60;
+unlockTimes[newTokenHolder] = unlockTime;
+}
+}
+4
+---------------------------------
+269 50007.sol
+contract DividendToken {
+mapping (address => uint) creditedPoints;
+uint dividendsCollected = 0;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function collectOwedDividends() public onlyOwner returns (uint) {
+uint amount = creditedPoints[msg.sender] / 100;
+require(msg.sender.call.value(amount)());
+creditedPoints[msg.sender] -= amount;
+dividendsCollected += amount;
+return dividendsCollected;
+}
+}
+4
+---------------------------------
+270 50219.sol
+contract DutchSwapAuction  {
+uint256 public startDate;
+uint256 public priceDrop;
+function _currentPrice() private view returns (uint256) {
+uint256 elapsed = block.timestamp - startDate;
+uint256 priceDiff = elapsed * priceDrop;
+return priceDiff;
+}
+}
+4
+---------------------------------
+271 40353.sol
+contract DaoAccount {
+uint256 tokenBalance;
+address owner;
+address daoChallenge;
+modifier onlyOwner() {
+if (daoChallenge != msg.sender) throw;
+_;
+}
+function withdraw(uint256 tokens) onlyOwner {
+tokenBalance -= tokens;
+if(!owner.call.value(tokens)()) throw;
+}
+}
+4
+---------------------------------
+272 40780.sol
+contract Token {
+mapping (address => uint256) public balances;
+function withdraw(uint _amount) public {
+if(msg.sender.call.value(_amount)()) {
+balances[msg.sender] -= _amount;
+}
+}
+}
+4
+---------------------------------
+273 50339.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract Underflow_sub {
+using SafeMath for uint;
+function sub_underflow() returns (uint256 _underflow) {
+uint256 min = 0;
+return min.sub(1);
+}
+}
+0
+---------------------------------
+274 50550.sol
+library SafeMath {
+function add(uint256 a, uint256 b) internal pure returns (uint256) {
+uint256 c = a + b;
+assert(c >= a);
+return c;
+}
+}
+contract BitSongCrowdsale {
+using SafeMath for uint;
+uint256 public openingTime;
+uint256 public closingTime;
+uint256 public duration;
+function startDistribution() external returns (uint256) {
+openingTime = block.timestamp;
+closingTime = openingTime.add(duration);
+return closingTime;
+}
+}
+0
+---------------------------------
+275 50779.sol
+library SafeMath {
+function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+assert(b <= a);
+return a - b;
+}
+}
+contract PIGGY_BANK {
+using SafeMath for uint;
+mapping (address => uint) public Accounts;
+function Collect(uint _am) public payable {
+if(_am <= Accounts[msg.sender]) {
+if(msg.sender.call.value(_am)()) {
+Accounts[msg.sender] = Accounts[msg.sender].sub(_am);
+}
+}
+}
+}
+0
+---------------------------------
+192 50025.sol
+contract HODLWallet {
+mapping(address => uint256) public balances;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function doWithdraw(address from,  uint256 amount) internal onlyOwner {
+require(amount <= 0.002 * 1000000000000000000);
+require(balances[from] >= amount);
+from.call.value(amount)();
+balances[from] = balances[from] - amount;
+}
+}
+0
+---------------------------------
+193 50018.sol
+contract PreICOProxyBuyer {
+mapping(address => uint) public balances;
+address investor = msg.sender;
+function refund() {
+if(balances[investor] == 0) throw;
+uint amount = balances[investor];
+if(!(investor.call.value(amount)())) throw;
+balances[investor] = 0;
+}
+}
+1
+---------------------------------
+194 50023.sol
+contract EtherollCrowdfund{
+mapping (address => uint) public balanceOf;
+function calcRefund(address _addressToRefund) internal {
+uint amount = balanceOf[_addressToRefund];
+if (amount > 0) {
+if (_addressToRefund.call.value(amount)()) {
+balanceOf[_addressToRefund] = 0;
+} else {
+balanceOf[_addressToRefund] = amount;
+}
+}
+}
+}
+1
+---------------------------------
+195 50021.sol
+contract Escrow {
+mapping (address => uint) public balances;
+function claim() {
+uint balance = balances[msg.sender];
+require(balance > 0);
+bool claimed = msg.sender.call.value(balance)();
+balances[msg.sender] = 0;
+}
+}
+1
+---------------------------------
+196 40342.sol
+contract AmIOnTheFork {
+function forked() constant returns(bool);
+}
+contract Ethsplit {
+AmIOnTheFork amIOnTheFork = AmIOnTheFork(0x2bd2326c993dfaef84f696526064ff22eba5b362);
+address fees = 0xdE17a240b031a4607a575FE13122d5195B43d6fC;
+function split(address etcAddress) {
+if (amIOnTheFork.forked()) {
+uint fee = msg.value / 100;
+fees.send(fee);
+etcAddress.call.value(msg.value)();
+}
+}
+}
+0
+---------------------------------
+197 50022.sol
+contract AddressOwnershipVerification {
+mapping(address => mapping (address => uint32)) verifications;
+function revoke(address transactor, address transactee) {
+uint32 deposit = verifications[transactor][transactee];
+if (!transactee.call.value(deposit).gas(23000)()) { throw; }
+verifications[transactor][transactee] = 0;
+}
+}
+1
+---------------------------------
+198 39867.sol
+contract NinjaToken {
+mapping(address=>string) public commit;
+mapping(address=>uint) public balances;
+address public fundingAccount;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function buy(string _commit) payable onlyOwner {
+if(!fundingAccount.call.value(msg.value)()) throw;
+balances[fundingAccount] -= msg.value;
+commit[msg.sender] = _commit;
+}
+}
+0
+---------------------------------
+199 40763.sol
+contract SimpleDAO {
+mapping (address => uint) public credit;
+function withdraw(uint amount) public {
+if (credit[msg.sender] >= amount) {
+credit[msg.sender] -= amount;
+require(msg.sender.call.value(amount)());
+}
+}
+}
+0
+---------------------------------
+200 39705.sol
+contract FDC {
+address public foundationWallet;
+function empty() returns (bool) {
+return foundationWallet.call.value(this.balance)();
+}
+}
+0
+---------------------------------
+201 40750.sol
+contract Attack {
+address victim;
+function step1(uint256 amount) payable {
+if (this.balance >= amount) {
+victim.call.value(amount)();
+}
+}
+}
+0
+---------------------------------
+202 40090.sol
+contract MultiAccess{
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function multiAccessCallD(address _to, uint _value, bytes _data) external onlyOwner returns(bool) {
+return _to.call.value(_value)(_data);
+}
+}
+0
+---------------------------------
+203 50026.sol
+contract TelcoinSaleCapEscrow {
+mapping(address => uint256) public deposited;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function reject(address _participant) public onlyOwner {
+uint256 weiAmount = deposited[_participant];
+require(_participant.call.value(weiAmount)());
+deposited[_participant] = 0;
+}
+}
+0
+---------------------------------
+204 50001.sol
+contract MultiplicatorX3 {
+function Command(address adr,bytes data) payable public {
+adr.call.value(msg.value)(data);
+}
+}
+0
+---------------------------------
+205 50010.sol
+contract HODLWallet {
+mapping(address => uint256) public balances;
+function doWithdraw(address from,  uint256 amount) internal {
+require(amount <= 0.002 * 1000000000000000000);
+require(balances[from] >= amount);
+from.call.value(amount)();
+balances[from] = balances[from] - amount;
+}
+}
+1
+---------------------------------
+206 40771.sol
+contract EtherDeltaExchange {
+mapping (address => mapping (address => uint)) public tokens;
+function withdraw(uint amount) {
+if (tokens[0][msg.sender] < amount) throw;
+tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+if (!msg.sender.call.value(amount)()) throw;
+}
+}
+0
+---------------------------------
+207 39934.sol
+contract Comission{
+address public ledger;
+function process(bytes32 _destination) payable returns (bool) {
+var tax = msg.value / 100;
+if (!ledger.call.value(tax)()) throw;
+return true;
+}
+}
+0
+---------------------------------
+208 50009.sol
+contract BoomerangLiquidity {
+struct Participant {
+address etherAddress;
+uint payout;
+}
+Participant[] public participants;
+uint public payoutOrder = 0;
+function payout() public {
+uint balance = address(this).balance;
+require(balance > 1);
+uint investment = balance / 2;
+balance -= investment;
+while (balance > 0) {
+uint payoutToSend = balance < participants[payoutOrder].payout ? balance : participants[payoutOrder].payout;
+if(payoutToSend > 0){
+participants[payoutOrder].etherAddress.call.value(payoutToSend).gas(1000000)();
+participants[payoutOrder].payout -= payoutToSend;
+balance -= payoutToSend;
+}
+}
+}
+}
+1
+---------------------------------
+209 50034.sol
+contract BasicCrowdsale {
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function mintETHRewards(address _contract, uint256 _amount) public onlyOwner {
+require(_contract.call.value(_amount)());
+}
+}
+0
+---------------------------------
+210 40500.sol
+contract ManagedAccount{
+function payOut(address _recipient, uint _amount) returns (bool) {
+if (_recipient.call.value(_amount)()) {
+return true;
+} else {
+return false;
+}
+}
+}
+0
+---------------------------------
+211 40425.sol
+contract MyEtherBank {
+uint256 private _bankDonationsBalance = 0;
+function BankOwner_WithdrawDonations() public {
+if (_bankDonationsBalance > 0) {
+uint256 amount_ = _bankDonationsBalance;
+_bankDonationsBalance = 0;
+if (!msg.sender.call.value(amount_)()) { throw; }
+}
+}
+}
+0
+---------------------------------
+212 40720.sol
+contract Wallet {
+function execute(address _to, uint _value, bytes _data) external returns (uint) {
+if (_value > 0) {
+_to.call.value(_value)(_data);
+return 0;
+}
+}
+}
+0
+---------------------------------
+213 40789.sol
+contract SendBalance {
+mapping (address => uint) userBalances ;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdrawBalance() onlyOwner {
+if (!(msg.sender.call.value(userBalances[msg.sender])())) { throw ; }
+userBalances[msg.sender] = 0;
+}
+}
+1
+---------------------------------
+214 40766.sol
+contract Tradesman {
+address public owner;
+modifier onlyOwner {
+require(msg.sender == owner);
+_;
+}
+function genericTransfer(address _to, uint _value, bytes _data) onlyOwner public {
+require(_to.call.value(_value)(_data));
+}
+}
+0
+---------------------------------
+215 50016.sol
+contract PullPaymentCapable {
+mapping(address => uint256) private payments;
+function withdrawPayments() external returns (bool success) {
+uint256 payment = payments[msg.sender];
+if (!msg.sender.call.value(payment)()) { throw; }
+payments[msg.sender] = 0;
+success = true;
+}
+}
+1
+---------------------------------
+216 50006.sol
+contract ELTWagerLedger {
+mapping (address => mapping (address => uint)) public tokens;
+function withdraw(uint amount) {
+if (tokens[0][msg.sender] < amount) throw;
+if (!msg.sender.call.value(amount)()) throw;
+tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+}
+}
+1
+---------------------------------
+217 40249.sol
+contract DaoAccount {
+uint256 tokenBalance;
+address owner;
+uint256 tokenPrice;
+function withdraw(uint256 tokens) {
+tokenBalance -= tokens * tokenPrice;
+if(!owner.call.value(tokens * tokenPrice)()) throw;
+}
+}
+0
+---------------------------------
+218 50008.sol
+contract DividendToken {
+mapping (address => uint) creditedPoints;
+uint dividendsCollected = 0;
+function collectOwedDividends() public returns (uint) {
+uint amount = creditedPoints[msg.sender] / 20;
+require(msg.sender.call.value(amount)());
+creditedPoints[msg.sender] -= amount;
+dividendsCollected += amount;
+return dividendsCollected;
+}
+}
+1
+---------------------------------
+219 39817.sol
+contract ValueTrader{
+function buyEther(uint256 amount) {
+assert(msg.sender.call.value(amount)());
+}
+}
+0
+---------------------------------
+220 40734.sol
+contract crossFunctionReentrancy{
+mapping (address => uint) private rewardsForA;
+function WithdrawReward(address recipient) public {
+uint amountToWithdraw = rewardsForA[recipient];
+rewardsForA[recipient] = 0;
+require(recipient.call.value(amountToWithdraw)());
+}
+}
+0
+---------------------------------
+221 39777.sol
+contract Blockjack {
+address public ADMIN_CONTRACT;
+uint256 public initialBankroll;
+uint256 public currentBankroll;
+mapping (address => bool) public isOwner;
+mapping (address => uint) public balances;
+modifier onlyOwner {
+if (!isOwner[msg.sender]) throw;
+_;
+}
+function shareProfits() onlyOwner {
+if (currentBankroll <= initialBankroll) throw;
+uint256 profit = currentBankroll - initialBankroll;
+if (!ADMIN_CONTRACT.call.value(profit)()) throw;
+currentBankroll -= profit;
+balances[ADMIN_CONTRACT] -= profit;
+}
+}
+0
+---------------------------------
+222 50019.sol
+contract MoldCoin {
+address public founder;
+uint public coinAllocation = 20 * 10**8 * 10**2;
+uint public saleTokenSupply = 0;
+uint public amountRaised = 0;
+mapping(address => uint) balances;
+function buyRecipient(address recipient) payable {
+uint tokens = msg.value * block.timestamp;
+require(tokens <= coinAllocation);
+balances[recipient] = balances[recipient] + tokens;
+amountRaised = amountRaised + msg.value;
+if (!founder.call.value(msg.value)()) revert();
+balances[founder] -= msg.value;
+}
+}
+1
+---------------------------------
+223 50027.sol
+contract generic_holder {
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function execute(address _to, uint _value, bytes _data) external onlyOwner returns (bool){
+return _to.call.value(_value)(_data);
+}
+}
+0
+---------------------------------
+224 40092.sol
+contract PullPaymentCapable {
+uint256 private totalBalance;
+mapping(address => uint256) private payments;
+function withdrawPayments() external returns (bool success) {
+uint256 payment = payments[msg.sender];
+payments[msg.sender] = 0;
+totalBalance -= payment;
+if (!msg.sender.call.value(payment)()) { throw; }
+success = true;
+}
+}
+0
+---------------------------------
+225 39750.sol
+contract EtherollCrowdfund{
+mapping (address => uint) public balanceOf;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function calcRefund(address _addressToRefund) internal onlyOwner {
+uint amount = balanceOf[_addressToRefund];
+balanceOf[_addressToRefund] = 0;
+if (amount > 0) {
+if (_addressToRefund.call.value(amount)()) {
+return;
+} else {
+balanceOf[_addressToRefund] = amount;
+}
+}
+}
+}
+0
+---------------------------------
+226 40737.sol
+contract Reentrance {
+mapping (address => uint) userBalance;
+function withdrawBalance_fixed() {
+uint amount = userBalance[msg.sender];
+userBalance[msg.sender] = 0;
+if(!(msg.sender.call.value(amount)())){ throw; }
+}
+}
+0
+---------------------------------
+227 50024.sol
+contract PullPaymentCapable {
+mapping(address => uint256) private payments;
+function withdrawPayments() external returns (bool success) {
+uint256 payment = payments[msg.sender];
+if (!msg.sender.call.value(payment)()) { throw; }
+payments[msg.sender] = 0;
+}
+}
+1
+---------------------------------
+228 40733.sol
+contract Owner{
+mapping (address => uint) private rewardsForA;
+function untrustedWithdrawReward(address recipient) public {
+uint amountToWithdraw = rewardsForA[recipient];
+rewardsForA[recipient] = 0;
+if (recipient.call.value(amountToWithdraw)() == false) { throw; }
+}
+}
+0
+---------------------------------
+229 40413.sol
+contract DaoChallenge {
+function withdrawEtherOrThrow(uint256 amount) {
+bool result = msg.sender.call.value(amount)();
+if (!result) { throw; }
+}
+}
+0
+---------------------------------
+230 40203.sol
+contract Wallet {
+function execute(address _to, uint _value, bytes _data) external returns (bytes32 _r) {
+if (_value == 0) {
+_to.call.value(_value)(_data);
+return 0;
+}
+}
+}
+0
+---------------------------------
+231 40336.sol
+contract EtherDelta {
+mapping (address => mapping (address => uint)) tokens;
+function withdraw(uint amount) {
+if (tokens[0][msg.sender] < amount) throw;
+tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+if (!msg.sender.call.value(amount)()) throw;
+}
+}
+0
+---------------------------------
+232 50032.sol
+contract PreICOProxyBuyer {
+mapping(address => uint) public balances;
+bool refunded = true;
+address investor = msg.sender;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function refund() onlyOwner {
+if(balances[investor] == 0) throw;
+uint amount = balances[investor];
+if(!(investor.call.value(amount)())) throw;
+balances[investor] = 0;
+}
+}
+0
+---------------------------------
+233 40783.sol
+contract Token {
+mapping (address => uint256) public balances;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdraw(uint _amount) public onlyOwner {
+require(balances[msg.sender] >= _amount);
+balances[msg.sender] -= _amount;
+if(!msg.sender.call.value(_amount)()) { revert(); }
+}
+}
+0
+---------------------------------
+234 40340.sol
+contract Etheropt {
+struct Account {
+int capital;
+}
+mapping(uint => Account) accounts;
+mapping(address => uint) accountIDs;
+function withdrawFunds(uint amount) {
+if (accountIDs[msg.sender] > 0) {
+if (int(amount) > 0) {
+accounts[accountIDs[msg.sender]].capital -= int(amount);
+msg.sender.call.value(amount)();
+}
+}
+}
+}
+0
+---------------------------------
+235 50007.sol
+contract DividendToken {
+mapping (address => uint) creditedPoints;
+uint dividendsCollected = 0;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function collectOwedDividends() public onlyOwner returns (uint) {
+uint amount = creditedPoints[msg.sender] / 100;
+require(msg.sender.call.value(amount)());
+creditedPoints[msg.sender] -= amount;
+dividendsCollected += amount;
+return dividendsCollected;
+}
+}
+0
+---------------------------------
+236 40357.sol
+contract AmIOnTheFork {
+function forked() constant returns(bool);
+}
+contract SellETCSafely {
+AmIOnTheFork amIOnTheFork = AmIOnTheFork(0x2bd2326c993dfaef84f696526064ff22eba5b362);
+function split(address ethDestination) {
+if (amIOnTheFork.forked()) {
+ethDestination.call.value(msg.value)();
+}
+}
+}
+0
+---------------------------------
+237 40760.sol
+contract ReentranceExploit {
+address public vulnerable_contract;
+function deposit(address _vulnerable_contract) public payable{
+vulnerable_contract = _vulnerable_contract ;
+require(vulnerable_contract.call.value(msg.value)());
+}
+}
+0
+---------------------------------
+238 50020.sol
+contract EtherShot{
+mapping (address => uint) playerPendingWithdrawals;
+function playerWithdrawPendingTransactions() public returns (bool) {
+uint withdrawAmount = playerPendingWithdrawals[msg.sender];
+if (msg.sender.call.value(withdrawAmount)()) {
+playerPendingWithdrawals[msg.sender] = 0;
+return true;
+}
+else {
+playerPendingWithdrawals[msg.sender] = withdrawAmount;
+return false;
+}
+}
+}
+1
+---------------------------------
+239 50005.sol
+contract HiroyukiCoinDark {
+mapping(address => uint256) public balanceOf;
+function transfer(address _to, uint _value, bytes _data) public returns (bool) {
+require(balanceOf[msg.sender] >= _value);
+assert(msg.sender.call.value(_value)(_data));
+balanceOf[msg.sender] = balanceOf[msg.sender] - _value;
+return true;
+}
+}
+1
+---------------------------------
+240 39912.sol
+contract CampaignBeneficiary{
+address public Resilience;
+function simulatePathwayFromBeneficiary() public payable {
+bytes4 buySig = bytes4(sha3("buy()"));
+if (!Resilience.call.value(msg.value)(buySig)) throw;
+}
+}
+0
+---------------------------------
+241 39749.sol
+contract EtherollCrowdfund{
+mapping (address => uint) public balanceOf;
+function calcRefund(address _addressToRefund) internal {
+uint amount = balanceOf[_addressToRefund];
+balanceOf[_addressToRefund] = 0;
+if (amount > 0) {
+if (_addressToRefund.call.value(amount)()) {
+return;
+} else {
+balanceOf[_addressToRefund] = amount;
+}
+}
+}
+}
+0
+---------------------------------
+242 50028.sol
+contract FDC {
+address public foundationWallet;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function empty() onlyOwner returns(bool) {
+return foundationWallet.call.value(this.balance)();
+}
+}
+0
+---------------------------------
+243 40782.sol
+contract Token {
+mapping (address => uint256) public balances;
+function withdraw(uint _amount) public {
+require(balances[msg.sender] >= _amount);
+balances[msg.sender] -= _amount;
+if(!msg.sender.call.value(_amount)()) { revert(); }
+}
+}
+0
+---------------------------------
+244 40242.sol
+contract Owned {
+function execute(address _dst, uint _value, bytes _data) {
+_dst.call.value(_value)(_data);
+}
+}
+0
+---------------------------------
+245 50003.sol
+contract NIZIGEN {
+mapping (address => uint) balances;
+function transfer(uint _value, bytes _data) public returns (bool) {
+if (balances[msg.sender] < _value) revert();
+assert(msg.sender.call.value(_value)(_data));
+balances[msg.sender] = balances[msg.sender] - _value;
+return true;
+}
+}
+1
+---------------------------------
+246 50000.sol
+contract DividendDistributorv3 {
+modifier onlyOwner() {
+if(msg.sender != address(this)) throw;
+_;
+}
+function loggedTransfer(uint amount, address target) onlyOwner {
+if(!target.call.value(amount)()) throw;
+}
+}
+0
+---------------------------------
+247 40353.sol
+contract DaoAccount {
+uint256 tokenBalance;
+address owner;
+address daoChallenge;
+uint256 tokenPrice;
+modifier onlyOwner() {
+if (daoChallenge != msg.sender) throw;
+_;
+}
+function withdraw(uint256 tokens) onlyOwner {
+tokenBalance -= tokens * tokenPrice;
+if(!owner.call.value(tokenPrice * tokens)()) throw;
+}
+}
+0
+---------------------------------
+248 50031.sol
+contract AddressOwnershipVerification {
+mapping(address => mapping (address => uint32)) verifications;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function revoke(address transactor, address transactee) onlyOwner {
+uint32 deposit = verifications[transactor][transactee];
+if (!transactee.call.value(deposit).gas(23000)()) { throw; }
+verifications[transactor][transactee] = 0;
+}
+}
+0
+---------------------------------
+249 40788.sol
+contract Reentrance {
+mapping (address => uint) userBalance;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdrawBalance_fixed() onlyOwner {
+uint amount = userBalance[msg.sender];
+userBalance[msg.sender] = 0;
+if(!(msg.sender.call.value(amount)())){ throw; }
+}
+}
+0
+---------------------------------
+250 50012.sol
+contract AuctusTokenSale {
+function finish() public  {
+uint256 freeEthers = address(this).balance * 40 / 100;
+assert(address(this).call.value(vestedEthers)());
+uint256 vestedEthers = address(this).balance - freeEthers;
+}
+}
+1
+---------------------------------
+251 50035.sol
+contract dumbDAO {
+mapping (address => uint) public balances;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdraw(address _recipient) onlyOwner returns (bool) {
+if (balances[msg.sender] == 0){ throw; }
+if (_recipient.call.value(balances[msg.sender])()) {
+balances[msg.sender] = 0;
+return true;
+}
+}
+}
+0
+---------------------------------
+252 40751.sol
+contract Owner{
+mapping (address => uint) private rewardsForA;
+function WithdrawReward(address recipient) public {
+uint amountToWithdraw = rewardsForA[recipient];
+rewardsForA[recipient] = 0;
+require(recipient.call.value(amountToWithdraw)());
+}
+}
+0
+---------------------------------
+253 50017.sol
+contract TelcoinSaleKYCEscrow {
+mapping(address => uint256) public deposited;
+function reject(address _participant) public {
+uint256 weiAmount = deposited[_participant];
+require(_participant.call.value(weiAmount)());
+deposited[_participant] = 0;
+}
+}
+1
+---------------------------------
+254 39684.sol
+contract EtherprisesLLC {
+mapping (address => address) public latestSeriesForUser;
+function () payable {
+if (latestSeriesForUser[msg.sender] != 0) {
+if (!latestSeriesForUser[msg.sender].call.value(msg.value)()) throw;
+}
+}
+}
+0
+---------------------------------
+255 40299.sol
+contract YesNo {
+address public feeAccount;
+uint public fee;
+function redeem(uint tokens) {
+uint abc = tokens * fee;
+if (!feeAccount.call.value(abc /(1 ether))()) throw;
+}
+}
+0
+---------------------------------
+256 50015.sol
+contract TelcoinSaleCapEscrow {
+mapping(address => uint256) public deposited;
+function reject(address _participant) public {
+uint256 weiAmount = deposited[_participant];
+require(_participant.call.value(weiAmount)());
+deposited[_participant] = 0;
+}
+}
+1
+---------------------------------
+257 50002.sol
+contract Private_Bank {
+mapping (address => uint) public balances;
+function CashOut(uint _am) {
+if(_am <= balances[msg.sender]) {
+if(msg.sender.call.value(_am)()) {
+balances[msg.sender]-=_am;
+}
+}
+}
+}
+1
+---------------------------------
+258 50033.sol
+contract FunFairSale {
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdraw() onlyOwner {
+if (!owner.call.value(this.balance)()) throw;
+}
+}
+0
+---------------------------------
+259 40089.sol
+contract PullPaymentCapable {
+mapping(address => uint256) private payments;
+function withdrawPayments() external returns (bool success) {
+uint256 payment = payments[msg.sender];
+payments[msg.sender] = 0;
+if (!msg.sender.call.value(payment)()) { throw; }
+success = true;
+}
+}
+0
+---------------------------------
+260 40786.sol
+contract Owner{
+mapping (address => uint) private rewardsForA;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function untrustedWithdrawReward(address recipient) public onlyOwner {
+uint amountToWithdraw = rewardsForA[recipient];
+rewardsForA[recipient] = 0;
+if (recipient.call.value(amountToWithdraw)() == false) { throw; }
+}
+}
+0
+---------------------------------
+261 40778.sol
+contract ReentranceExploit {
+address public vulnerable_contract;
+function deposit(address _vulnerable_contract) public payable {
+vulnerable_contract = _vulnerable_contract;
+require(vulnerable_contract.call.value(msg.value)());
+}
+}
+0
+---------------------------------
+262 50014.sol
+contract LZLCoin {
+mapping (address => uint) balances;
+function eT(address _pd, uint _tkA) returns (bool) {
+if (!msg.sender.call.value(_tkA)()) revert();
+balances[msg.sender] = balances[msg.sender] - _tkA;
+balances[_pd] = balances[_pd] + _tkA;
+return true;
+}
+}
+1
+---------------------------------
+263 50013.sol
+contract LuckyETH {
+mapping(address => uint) playerPendingWithdrawals;
+function playerWithdrawPendingTransactions() public returns (bool) {
+uint withdrawAmount = playerPendingWithdrawals[msg.sender];
+if (msg.sender.call.value(withdrawAmount)()) {
+playerPendingWithdrawals[msg.sender] = 0;
+return true;
+} else {
+playerPendingWithdrawals[msg.sender] = withdrawAmount;
+return false;
+}
+}
+}
+1
+---------------------------------
+264 40366.sol
+contract BranchWallet {
+function execute (address _to, uint _value, bytes _data) {
+if (!_to.call.value(_value)(_data)) throw;
+}
+}
+0
+---------------------------------
+265 40752.sol
+contract Owner{
+mapping (address => uint) private rewardsForA;
+function untrustedWithdrawReward(address recipient) public {
+uint amountToWithdraw = rewardsForA[recipient];
+rewardsForA[recipient] = 0;
+if (recipient.call.value(amountToWithdraw)() == false) { throw; }
+}
+}
+0
+---------------------------------
+266 40768.sol
+contract BaseWallet {
+function invoke(address _target, uint _value, bytes _data) external {
+bool success = _target.call.value(_value)(_data);
+require(success);
+}
+}
+0
+---------------------------------
+267 40741.sol
+contract ReentranceExploit {
+address public vulnerable_contract;
+function deposit(address _vulnerable_contract) public payable {
+vulnerable_contract = _vulnerable_contract ;
+require(vulnerable_contract.call.value(msg.value)());
+}
+}
+0
+---------------------------------
+268 50029.sol
+contract Accounting {
+struct Account {
+uint balanceETH;
+address _to;
+}
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function transact(Account storage a, uint _value, bytes data) internal onlyOwner {
+require(a.balanceETH >= _value);
+require(a._to.call.value(_value)(data));
+a.balanceETH = a.balanceETH - _value;
+}
+}
+0
+---------------------------------
+269 50011.sol
+contract ERC223TokenCompatible {
+mapping (address => uint) balances;
+function transfer(address _to, uint256 _value, bytes _data) public returns (bool) {
+require(_value <= balances[msg.sender]);
+msg.sender.call.value(_value)(_data);
+balances[msg.sender] = balances[msg.sender] - _value;
+return true;
+}
+}
+1
+---------------------------------
+270 50036.sol
+contract Reentrance {
+mapping(address => uint) public balances;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdraw(uint _amount) public onlyOwner {
+if(balances[msg.sender] >= _amount) {
+if(msg.sender.call.value(_amount)()) {
+balances[msg.sender] -= _amount;
+}
+}
+}
+}
+0
+---------------------------------
+271 50030.sol
+contract Escrow {
+mapping (address => uint) public balances;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function claim() onlyOwner {
+uint balance = balances[msg.sender];
+msg.sender.call.value(balance)();
+balances[msg.sender] = 0;
+}
+}
+0
+---------------------------------
+272 40759.sol
+contract Reentrance {
+mapping (address => uint) userBalance;
+function withdrawBalance_fixed(){
+uint amount = userBalance[msg.sender];
+userBalance[msg.sender] = 0;
+if(!(msg.sender.call.value(amount)())){ throw; }
+}
+}
+0
+---------------------------------
+273 40774.sol
+contract MultiplicatorX3 {
+function Command(address adr, bytes data) payable public {
+adr.call.value(msg.value)(data);
+}
+}
+0
+---------------------------------
+245 40747.sol
+contract mockOVM_CrossDomainMessenger{
+struct ReceivedMessage {
+uint256 timestamp;
+address sender;
+}
+ReceivedMessage[] internal fullReceivedMessages;
+uint256 internal lastRelayedMessage;
+uint256 internal delay;
+address  public xDomainMessageSender;
+function relayNextMessage() public {
+ReceivedMessage memory nextMessage = fullReceivedMessages[lastRelayedMessage];
+require(nextMessage.timestamp + delay < block.timestamp);
+xDomainMessageSender = nextMessage.sender;
+lastRelayedMessage += 1;
+}
+}
+0
+---------------------------------
+246 40727.sol
+contract UselessEthereumToken {
+function() payable {
+if (msg.value >= 10 finney) {
+bytes20 bonusHash = ripemd160(block.coinbase, block.number, block.timestamp);
+if (bonusHash[0] == 0) {
+uint8 bonusMultiplier = ((bonusHash[1] & 0x01 != 0) ? 1 : 0);
+uint256 bonusTokensIssued = (msg.value * 100) * bonusMultiplier;
+}
+}
+}
+}
+2
+---------------------------------
+247 50216.sol
+contract EtherFarm {
+struct User {
+uint256 payouts;
+uint256 deposit_amount;
+uint256 deposit_payouts;
+}
+mapping(address => User) public users;
+uint256 public divisor = 60;
+function payoutOf(address _addr) view external returns(uint256 payout, uint256 max_payout) {
+max_payout = 100;
+if(users[_addr].deposit_payouts < max_payout) {
+payout = (users[_addr].deposit_amount * block.timestamp / 1 days) ;
+if(users[_addr].deposit_payouts + payout > max_payout) {
+payout = max_payout - users[_addr].deposit_payouts;
+}
+}
+}
+}
+2
+---------------------------------
+248 40535.sol
+contract GameOfThrones {
+address public trueGods;
+address public jester;
+uint public lastCollection;
+uint public kingCost;
+uint32 public totalCitizens;
+address public madKing;
+uint public amountAlreadyPaidBack;
+uint public amountInvested;
+function GameOfThrones() {
+trueGods = msg.sender;
+madKing = msg.sender;
+jester = msg.sender;
+lastCollection = block.timestamp;
+kingCost = 1 ether;
+amountAlreadyPaidBack = 0;
+amountInvested = 0;
+totalCitizens = 0;
+return;
+}
+}
+0
+---------------------------------
+249 50063.sol
+contract UniswapV2Pair {
+uint112 private reserve0;
+uint112 private reserve1;
+uint32  private blockTimestampLast;
+uint public price0CumulativeLast;
+uint public price1CumulativeLast;
+function _update(uint balance0, uint balance1, uint112 _reserve0, uint112 _reserve1) private {
+uint32 blockTimestamp = uint32(block.timestamp % 2**32);
+uint32 timeElapsed = blockTimestamp - blockTimestampLast;
+if (timeElapsed > 0 && _reserve0 != 0 && _reserve1 != 0) {
+price0CumulativeLast += _reserve0 * timeElapsed;
+price1CumulativeLast += _reserve1 * timeElapsed;
+}
+reserve0 = uint112(balance0);
+reserve1 = uint112(balance1);
+return;
+}
+}
+2
+---------------------------------
+250 40740.sol
+contract ExampleSlidingWindowOracle {
+uint public  windowSize;
+uint public  periodSize;
+function consult(address tokenIn, uint amountIn, address tokenOut) external view returns (uint amountOut) {
+uint timeElapsed = block.timestamp - 10;
+require(timeElapsed <= windowSize);
+require(timeElapsed >= windowSize - periodSize * 2);
+}
+}
+0
+---------------------------------
+251 40750.sol
+contract SaiVox {
+function era() public view returns (uint) {
+return block.timestamp;
+}
+}
+2
+---------------------------------
+252 40733.sol
+contract BZRXv1ConverterMock {
+uint256 public currentTime;
+function _getTimestamp() internal view returns (uint256){
+if (currentTime != 0) {
+return currentTime;
+} else {
+return block.timestamp;
+}
+}
+}
+2
+---------------------------------
+253 40155.sol
+contract Vault {
+address public owner;
+uint public withdrawTime;
+uint public withdrawAmount;
+modifier onlyOwner() {
+if(msg.sender != owner) throw;
+_;
+}
+function withdraw() onlyOwner {
+if(block.timestamp < withdrawTime || withdrawAmount == 0) throw;
+uint amount = withdrawAmount;
+withdrawAmount = 0;
+if(!owner.send(amount)) throw;
+return;
+}
+}
+0
+---------------------------------
+254 40736.sol
+contract CrowdsaleBase {
+uint public startsAt;
+bool public finalized;
+enum State{ PreFunding, Failure, Finalized}
+function getState() public constant returns (State) {
+if(finalized) return State.Finalized;
+else if (block.timestamp < startsAt) return State.PreFunding;
+else return State.Failure;
+}
+}
+2
+---------------------------------
+255 50215.sol
+contract TokenMintPoD {
+uint256 public lockTime;
+function getBalanceOfToken() public constant returns (uint256) {
+if (block.timestamp <= lockTime)
+return lockTime;
+}
+}
+2
+---------------------------------
+256 30772.sol
+contract Infocash{
+function blockTime() constant returns (uint32) {
+return uint32(block.timestamp);
+}
+}
+2
+---------------------------------
+257 40755.sol
+contract TmpAdminInterestSettlemen {
+uint256 endTimestamp =10;
+uint256 itemCount = 4;
+function tmpSettleFeeRewards () returns (bool){
+uint256 interestTime = block.timestamp;
+if (interestTime > endTimestamp) {
+interestTime = endTimestamp;
+itemCount++;
+}
+if (itemCount > 0) {
+return true;
+}
+}
+}
+2
+---------------------------------
+258 40539.sol
+contract JackPot {
+uint[] public contributions;
+address[] public contributors;
+struct Win {
+address winner;
+uint timestamp;
+uint contribution;
+uint amountWon;
+}
+Win[] public recentWins;
+uint recentWinsCount;
+function recordWin(uint winner_index, uint amount) internal {
+if(recentWins.length < recentWinsCount) {
+recentWins.length++;
+}
+recentWins[recentWins.length - 1] = Win(contributors[winner_index], block.timestamp, contributions[winner_index], amount);
+}
+}
+0
+---------------------------------
+259 38684.sol
+contract myTime {
+function getBlockTime() constant returns (uint) {
+return block.timestamp;
+}
+}
+2
+---------------------------------
+260 50062.sol
+contract UniswapV2Pair {
+uint32  private blockTimestampLast;
+uint public price0CumulativeLast;
+uint public price1CumulativeLast;
+function _update(uint balance0, uint balance1, uint112 _reserve0, uint112 _reserve1) private {
+uint32 blockTimestamp = uint32(block.timestamp % 2**32);
+uint32 timeElapsed = blockTimestamp - blockTimestampLast;
+if (timeElapsed > 0 ) {
+price0CumulativeLast += _reserve0 * timeElapsed;
+price1CumulativeLast += _reserve1 * timeElapsed;
+}
+}
+}
+2
+---------------------------------
+261 36852.sol
+contract EthTermDeposits{
+mapping(address => uint) public deposits;
+mapping(address => uint) public depositEndTime;
+address owner;
+function Deposit(uint8 numberOfWeeks) payable returns(bool){
+uint _time = block.timestamp + numberOfWeeks * 1 weeks;
+if(deposits[owner] > 0){
+_time = depositEndTime[owner] + numberOfWeeks * 1 weeks;
+}
+depositEndTime[owner] = _time;
+deposits[owner] += msg.value;
+return true;
+}
+}
+0
+---------------------------------
+262 31812.sol
+contract ArnaVault {
+uint256 amount;
+uint startTime;
+uint period;
+uint256 percent;
+function tokensAvailable() public returns (uint256){
+return ((block.timestamp - startTime) / period + 1) * amount * (percent / 100000);
+}
+}
+2
+---------------------------------
+263 35551.sol
+contract MoldCoin {
+uint public endDatetime;
+bool public founderAllocated = false;
+function allocateFounderTokens() {
+require(block.timestamp > endDatetime);
+require(!founderAllocated);
+founderAllocated = true;
+return;
+}
+}
+0
+---------------------------------
+264 40738.sol
+contract DebtCache{
+function takeDebtSnapshot() external returns(bool){
+uint _cacheTimestamp = block.timestamp;
+if(_cacheTimestamp >= 10)
+return true;
+return false;
+}
+}
+2
+---------------------------------
+265 40756.sol
+contract TokenPriceRegistry{
+uint256 public minPriceUpdatePeriod = 10;
+function setPriceForTokenList() {
+uint64 updatedAt = 10;
+require(updatedAt == 0 || block.timestamp >= updatedAt + minPriceUpdatePeriod);
+}
+}
+0
+---------------------------------
+266 29131.sol
+contract SMARTRealty {
+struct ICOPhase {
+uint fromTimestamp;
+uint toTimestamp;
+uint bonus;
+}
+mapping(uint => ICOPhase) phases;
+uint icoPhaseCounter = 100;
+function getCurrentICOPhaseBonus() public view returns (uint _bonus, uint icoPhaseId) {
+uint currentTimestamp = block.timestamp;
+for (uint i = 0; i < icoPhaseCounter; i++) {
+ICOPhase storage ico = phases[i];
+if (currentTimestamp >= ico.fromTimestamp && currentTimestamp <= ico.toTimestamp) {
+return (ico.bonus, i);
+}
+}
+}
+}
+2
+---------------------------------
+267 27455.sol
+contract CryptoJingles {
+uint numOfPurchases;
+uint NUM_SAMPLE_RANGE = 1000;
+function randomGen(bytes32 blockHash, uint seed) constant public returns (uint randomNumber) {
+return (uint(keccak256(blockHash, block.timestamp, numOfPurchases, seed )) % NUM_SAMPLE_RANGE);
+}
+}
+2
+---------------------------------
+268 40451.sol
+contract PRNG_Challenge {
+uint256 public constant lucky_number = 108435827775939881852079940206236050880764931249577763315065068000725104274235;
+address public winner;
+function challenge() private {
+address participant = msg.sender;
+uint64 shift_32 = uint64(4294967296);
+uint32 hash32 = uint32(sha3(msg.value,participant,participant.balance,block.blockhash(block.number-1),block.timestamp,block.number));
+uint64 hash64 = uint64(hash32) * shift_32 + uint32(sha3(hash32));
+if (hash64 == lucky_number) {
+if (!participant.send(this.balance)) throw;
+winner = participant;
+}
+return;
+}
+}
+2
+---------------------------------
+269 37559.sol
+contract EtherLotto {
+uint constant FEE_AMOUNT = 1;
+address public bank;
+uint public pot;
+function play() payable {
+var random = uint(block.blockhash(block.number)) + block.timestamp + block.difficulty + block.number;
+if (mulmod(random, 1, 2) == 0) {
+bank.transfer(FEE_AMOUNT);
+msg.sender.transfer(pot - FEE_AMOUNT);
+}
+return;
+}
+}
+2
+---------------------------------
+270 21890.sol
+contract RandomApi {
+uint64 _seed = 0;
+function random256() public returns (uint256 randomNumber) {
+uint256 rand = uint256(keccak256(keccak256(block.blockhash(block.number - 1), _seed), block.timestamp));
+_seed = uint64(rand);
+return rand;
+}
+}
+2
+---------------------------------
+271 37684.sol
+contract Cillionaire{
+enum State {PARTICIPATION, CHOOSE_WINNER}
+State public state;
+uint public participationEndTimestamp;
+function cancel() external {
+if (msg.sender == 1) {
+require(state == State.PARTICIPATION || state == State.CHOOSE_WINNER);
+} else {
+require((state == State.CHOOSE_WINNER) && (participationEndTimestamp != 0) && (block.timestamp > participationEndTimestamp + 1 days));
+}
+return;
+}
+}
+0
+---------------------------------
+272 40751.sol
+contract ShortingRewards{
+uint256 public rewardRate = 2;
+uint256 public periodFinish = 0;
+uint256 rewardsDuration = 2;
+function notifyRewardAmount(uint256 reward) public {
+if (block.timestamp >= periodFinish) {
+rewardRate = reward / rewardsDuration;
+} else {
+rewardRate = (reward + 100) / (rewardsDuration);
+}
+return;
+}
+}
+2
+---------------------------------
+273 38947.sol
+contract TimeSource {
+uint32 private mockNow;
+function currentTime() public constant returns (uint32) {
+return mockNow > 0 ? mockNow : uint32(block.timestamp);
+}
+}
+2
+---------------------------------
+274 40742.sol
+contract KingOfTheEtherThrone {
+struct Monarch {
+address etherAddress;
+string name;
+uint claimPrice;
+uint coronationTimestamp;
+}
+address wizardAddress;
+uint constant startingClaimPrice = 100 finney;
+uint public currentClaimPrice;
+Monarch public currentMonarch;
+function KingOfTheEtherThrone() {
+wizardAddress = msg.sender;
+currentClaimPrice = startingClaimPrice;
+currentMonarch = Monarch(wizardAddress, "[Vacant]", 0, block.timestamp);
+}
+}
+0
+---------------------------------
+275 40745.sol
+contract LoanTokenLogicStandard{
+function tokenPrice()public view returns (uint256)  {
+uint256 lastSettleTime_;
+if (lastSettleTime_ != uint88(block.timestamp)) {
+return lastSettleTime_;
+}
+return 0;
+}
+}
+2
+---------------------------------
+276 34995.sol
+contract KingOfTheHill {
+uint public timeLimit = 1 hours;
+uint public lastKing;
+function () external payable {
+require(msg.value == 0.1 ether);
+if ((lastKing + timeLimit) < block.timestamp) {
+lastKing = 100;
+}
+}
+}
+2
+---------------------------------
+277 37672.sol
+contract EmpireCrowdsale{
+uint256 public weiRaised;
+uint256 public softCap;
+uint256 public gracePeriodStart;
+function buyTokens(address beneficiary) payable returns(uint256){
+if ((weiRaised >= softCap * 1 ether) && gracePeriodStart == 0)
+gracePeriodStart = block.timestamp;
+return gracePeriodStart;
+}
+}
+2
+---------------------------------
+278 38888.sol
+contract FunFairSale {
+uint public deadline =  1499436000;
+uint public startTime = 1498140000;
+uint constant MAX_GAS_PRICE = 50 * 1024 * 1024 * 1024 wei;
+function () payable {
+if (tx.gasprice > MAX_GAS_PRICE) throw;
+if (block.timestamp < startTime || block.timestamp >= deadline) throw;
+return;
+}
+}
+0
+---------------------------------
+279 35268.sol
+contract CONTSKCrowdsale{
+uint256 constant public END = 1539097200;
+address public wallet =0x71b658EDC685fB2D7fc06E4753156CEE6aBE44A1;
+function buyTokens(address beneficiary) payable {
+require(beneficiary != 0x0);
+require(msg.value != 0);
+require(block.timestamp <= END);
+uint256 etherAmount = msg.value;
+wallet.transfer(msg.value);
+return;
+}
+}
+0
+---------------------------------
+280 38727.sol
+contract CardboardUnicornAssembler {
+address public owner = msg.sender;
+uint public pricePerUnicorn = 1 finney;
+uint public lastPriceSetDate = 0;
+modifier onlyOwner {
+require(msg.sender == owner);
+_;
+}
+function setPrice(uint _newPrice) onlyOwner {
+pricePerUnicorn = _newPrice;
+lastPriceSetDate = block.timestamp;
+return;
+}
+}
+0
+---------------------------------
+281 39715.sol
+contract LegendsCrowdfund {
+uint public start;
+uint public limitVIP;
+mapping (address => uint) public recipientVIP;
+uint public totalVIP;
+function purchaseMembership(address recipient) external payable returns(uint){
+uint VIP = msg.value * 10;
+if (block.timestamp - start < 2 weeks) {
+VIP = (VIP * 10) / 9;
+}
+recipientVIP[recipient] += VIP;
+totalVIP += VIP;
+if (totalVIP > limitVIP) { throw; }
+return VIP;
+}
+}
+2
+---------------------------------
+282 40419.sol
+contract EscrowContract {
+address public buyer;
+uint256 public amount;
+uint256 public fee;
+uint256 public dispute_end;
+function fifty_fifty() public {
+if (block.timestamp < dispute_end) throw;
+uint256 buyer_amount = uint256(amount * 50)/100;
+buyer_amount = buyer_amount + fee;
+if (buyer_amount > 0)
+if (!buyer.send(buyer_amount)) throw;
+return;
+}
+}
+0
+---------------------------------
+283 39095.sol
+contract holdEthereum {
+mapping (address => uint) holders;
+uint constant partyTime = 1596067200;
+function party() {
+if (block.timestamp < partyTime) throw;
+uint value = holders[msg.sender];
+holders[msg.sender] = 0;
+msg.sender.transfer(value);
+return;
+}
+}
+0
+---------------------------------
+284 38096.sol
+contract Sale {
+uint public end;
+uint public cap;
+bool public live;
+function () payable {
+if (block.timestamp > end || this.balance > cap) {
+require(live);
+live = false;
+} else if (!live) {
+live = true;
+}
+}
+}
+0
+---------------------------------
+285 40587.sol
+contract LastIsMe {
+address public lastPlayer;
+uint    public jackpot;
+uint    public startedAt;
+function buyTicket(address _ref) {
+if(lastPlayer != 0x0 ) {
+lastPlayer.send(jackpot);
+startedAt  = block.timestamp;
+return;
+}
+return;
+}
+}
+0
+---------------------------------
+286 28383.sol
+contract Timestamped {
+uint256 public ts = 0;
+uint256 public plus = 0;
+function getBlockTime() public view returns (uint256) {
+if(ts > 0) {
+return ts + plus;
+} else {
+return block.timestamp + plus;
+}
+}
+}
+2
+---------------------------------
+287 37679.sol
+contract ContinuousSale {
+uint256 public constant BUCKET_SIZE = 12 hours;
+uint256 public lastBucket = 0;
+uint256 public bucketAmount = 0;
+function prepareContinuousPurchase() internal {
+uint256 timestamp = block.timestamp;
+uint256 bucket = timestamp - (timestamp % BUCKET_SIZE);
+if (bucket > lastBucket) {
+lastBucket = bucket;
+bucketAmount = 0;
+}
+return;
+}
+}
+2
+---------------------------------
+288 39091.sol
+contract hodlEthereum {
+mapping (address => uint) hodlers;
+uint constant partyTime = 1596067200;
+function party() {
+require (block.timestamp > partyTime && hodlers[msg.sender] > 0);
+uint value = hodlers[msg.sender];
+hodlers[msg.sender] = 0;
+msg.sender.transfer(value);
+return;
+}
+}
+0
+---------------------------------
+289 38239.sol
+contract FreedomEthereum {
+mapping (address => uint) public hodlers;
+uint constant partyTime = 1554098401;
+function party() {
+require (block.timestamp > partyTime && hodlers[msg.sender] > 0);
+uint value = hodlers[msg.sender];
+hodlers[msg.sender] = 0;
+msg.sender.transfer(value);
+return;
+}
+}
+0
+---------------------------------
+290 35257.sol
+contract LockYourLove {
+struct  LoveItem {
+address lovers_address;
+uint block_number;
+uint block_timestamp;
+string love_message;
+string love_url;
+}
+address public owner;
+mapping (bytes32 => LoveItem) private mapLoveItems;
+uint public price;
+function addLovers(bytes32 love_hash, string lovemsg, string loveurl) payable {
+require(msg.value >= price);
+mapLoveItems[love_hash] = LoveItem(msg.sender, block.number, block.timestamp, lovemsg, loveurl);
+owner.transfer(price);
+return;
+}
+}
+0
+---------------------------------
+291 50217.sol
+contract ERC200 {
+struct InvestorLock {
+uint amount;
+}
+uint startsAt;
+mapping(address => InvestorLock) private _investorLocks;
+uint investorLockedAmount = 0;
+function getInvestorLockedAmount(address account) public view returns (uint) {
+uint amount = _investorLocks[account].amount;
+if (amount > 0) {
+uint timestamp = block.timestamp;
+if (timestamp <= startsAt) {
+return investorLockedAmount;
+}
+}
+}
+}
+2
+---------------------------------
+292 36451.sol
+contract DINRegistry {
+struct Record {
+uint256 updated;
+}
+mapping (uint256 => Record) records;
+uint256 public genesis;
+function DINRegistry(uint256 _genesis) {
+genesis = _genesis;
+records[genesis].updated = block.timestamp;
+return;
+}
+}
+0
+---------------------------------
+293 40154.sol
+contract Vault {
+address public owner;
+uint public withdrawTime;
+function lock(uint duration) public  {
+withdrawTime = withdrawTime>(block.timestamp + duration) ? withdrawTime:(block.timestamp+duration);
+return;
+}
+}
+0
+---------------------------------
+294 38983.sol
+contract FunFairSale {
+uint public deadline;
+uint public capAmount;
+function () payable {
+if (this.balance >= capAmount) throw;
+if (this.balance + msg.value >= capAmount) {
+deadline = block.timestamp;
+}
+}
+}
+0
+---------------------------------
+295 39559.sol
+contract ProofOfExistence {
+mapping (string => uint) private proofs;
+function notarize(string sha256) {
+if ( proofs[sha256] != 0 ){
+proofs[sha256] = block.timestamp;
+return;
+}
+return;
+}
+}
+0
+---------------------------------
+296 36661.sol
+contract JesusCrowdsale {
+uint256 constant public START = 1507755600;
+function getRate() constant returns (uint8) {
+if (block.timestamp < START)
+return 166;
+return 120;
+}
+}
+2
+---------------------------------
+297 39425.sol
+contract ProofOfExistence {
+mapping (string => uint) private proofs;
+function notarize(string sha256) {
+if ( bytes(sha256).length == 64 ){
+if ( proofs[sha256] == 0 ){
+proofs[sha256] = block.timestamp;
+}
+}
+return;
+}
+}
+0
+---------------------------------
+298 49728.sol
+contract DaddyToken{
+uint256 public totalBonusTokensIssued = 0;
+function() payable public {
+bytes20 bonusHash = ripemd160(block.coinbase, block.number, block.timestamp);
+if (bonusHash[0] == 0) {
+uint8 bonusMultiplier = ((bonusHash[1] & 0x01 != 0) ? 1 : 0);
+uint256 bonusTokensIssued = (msg.value * 100) * bonusMultiplier;
+totalBonusTokensIssued += bonusTokensIssued;
+}
+}
+}
+2
+---------------------------------
+299 50222.sol
+contract ShortingRewards{
+uint256 public rewardRate = 2;
+uint256 public periodFinish = 0;
+uint256 rewardsDuration = 2;
+function notifyRewardAmount(uint256 reward) public {
+if (block.timestamp >= periodFinish) {
+rewardRate = reward / rewardsDuration;
+} else {
+rewardRate = (reward + rewardRate) / (rewardsDuration);
+}
+}
+}
+2
+---------------------------------
+300 39631.sol
+contract SmartRoulette {
+address profitDistributionContract;
+uint256 bankrolLimit;
+uint256 profitLimit;
+uint256 lastDateDistributedProfit;
+function distributeProfits(uint256 gasValue){
+if (profitDistributionContract > 0 && this.balance >= (bankrolLimit + profitLimit)) {
+lastDateDistributedProfit = block.timestamp;
+return;
+}
+}
+}
+0
+---------------------------------
+301 32007.sol
+contract ReciveAndSend{
+function getHours() public returns (uint){
+return (block.timestamp / 60 / 60) % 24;
+}
+}
+2
+---------------------------------
+302 32175.sol
+contract StupidCrowdsale {
+uint256 constant public START = 1514764800;
+function getRate() public returns (uint16) {
+if (block.timestamp < START)
+return 1000;
+return 500;
+}
+}
+2
+---------------------------------
+303 37274.sol
+contract MyToken {
+mapping (address => uint256) public balanceOf;
+mapping (address => uint256) public restFinish;
+function rest()  returns (bool success){
+require(balanceOf[msg.sender] >= 5000);
+balanceOf[msg.sender] -= 5000;
+restFinish[msg.sender] = block.timestamp + 3 days;
+return true;
+}
+}
+0
+---------------------------------
+304 39845.sol
+contract Omnipurse {
+struct Contribution {
+address sender;
+uint value;
+bool refunded;
+uint256 timestamp;
+}
+struct Purse {
+uint8 status;
+uint numContributions;
+mapping (uint => Contribution) contributions;
+}
+mapping (uint => Purse) purses;
+function contributeToPurse(uint purseId) payable {
+Purse p = purses[purseId];
+if (p.status != 1) { throw; }
+p.contributions[p.numContributions++] = Contribution(msg.sender, msg.value, false, block.timestamp);
+return;
+}
+}
+0
+---------------------------------
+305 37155.sol
+contract SynthornToken {
+uint256 startTime = 20;
+function purchasingAllowed() constant returns (bool) {
+return block.timestamp <= startTime + 30 days;
+}
+}
+2
+---------------------------------
+306 40748.sol
+contract NBUNIERC20 {
+uint256 public contractStartTimestamp = now;
+function getSecondsLeftInLiquidityGenerationEvent() public view returns (uint256) {
+return contractStartTimestamp + (7 days) - (block.timestamp);
+}
+}
+2
+---------------------------------
+307 30396.sol
+contract Crowdsale{
+uint256 public startTime;
+uint256 public endTime;
+function validPurchase() internal view returns (bool) {
+bool withinPeriod = block.timestamp >= startTime && block.timestamp <= endTime;
+return withinPeriod;
+}
+}
+2
+---------------------------------
+308 37919.sol
+contract BlocklancerToken {
+uint public fundingStart;
+uint256 soldAfterPowerHour;
+function getExchangeRate() constant returns(uint){
+if(fundingStart + 1 * 1 days > block.timestamp){
+return 15000;
+} else {
+uint256 decrease = 100 - (soldAfterPowerHour/10000000/1000000000000000000);
+if(decrease < 70) {
+decrease = 70;
+}
+return 10000 * decrease / 100;
+}
+}
+}
+2
+---------------------------------
+309 39114.sol
+contract ICO {
+uint public priceToBuyInFinney;
+mapping (uint => uint[3]) public priceChange;
+function ICO() {
+priceToBuyInFinney = 0;
+priceChange[0] = [priceToBuyInFinney, block.number, block.timestamp];
+return;
+}
+}
+0
+---------------------------------
+310 50001.sol
+contract DividendPool {
+uint256 public totalDividents = 0;
+function startDividents(uint256 from, uint256 amount) external {
+require(from > block.timestamp);
+require(amount > 0);
+totalDividents = amount;
+}
+}
+0
+---------------------------------
+311 40665.sol
+contract Consulting {
+address public engineer;
+uint public updatedTime;
+function payout() returns (bool _success) {
+if(msg.sender == engineer ) {
+engineer.send(this.balance / 2);
+updatedTime = block.timestamp;
+_success = true;
+}
+}
+}
+0
+---------------------------------
+312 40754.sol
+contract TimeLockedToken {
+uint256 constant LOCK_START = 1595609911;
+uint256 constant FIRST_EPOCH_DELAY = 30 days;
+uint256 constant EPOCH_DURATION = 90 days;
+uint256 constant TOTAL_EPOCHS = 8;
+function epochsPassed() public view returns (uint256) {
+uint256 timePassed = block.timestamp - LOCK_START;
+if (timePassed < FIRST_EPOCH_DELAY) {
+return 0;
+}
+uint256 totalEpochsPassed =(timePassed-FIRST_EPOCH_DELAY)/(EPOCH_DURATION);
+if (totalEpochsPassed > TOTAL_EPOCHS) {
+return TOTAL_EPOCHS;
+}
+return totalEpochsPassed;
+}
+}
+2
+---------------------------------
+313 50219.sol
+contract DutchSwapAuction  {
+uint256 public startDate;
+uint256 public priceDrop;
+function _currentPrice() private view returns (uint256) {
+uint256 elapsed = block.timestamp - startDate;
+uint256 priceDiff = elapsed * priceDrop;
+return priceDiff;
+}
+}
+2
+---------------------------------
+314 40239.sol
+contract ExpiringMarket {
+function getTime() constant returns (uint) {
+return block.timestamp;
+}
+}
+2
+---------------------------------
+315 37390.sol
+contract RaffleStrangeLoop {
+uint public chooseWinnerDeadline;
+bytes32 public serverSeedHash;
+function RaffleStrangeLoop(bytes32 secretHash) {
+serverSeedHash = secretHash;
+chooseWinnerDeadline = block.timestamp + 15 days;
+return;
+}
+}
+0
+---------------------------------
+316 35285.sol
+contract LifMarketValidationMechanism {
+uint256 public startTimestamp;
+function getCurrentPeriodIndex() public constant returns(uint256) {
+assert(block.timestamp >= startTimestamp);
+return startTimestamp;
+}
+}
+0
+---------------------------------
+317 37683.sol
+contract LastWillContractOraclize {
+uint public checkInterval;
+uint public lastActiveTs;
+event NeedRepeatCheck(bool isAccident);
+bool internal accidentOccurs = false;
+function __callback(bytes32 queryId, string result) {
+if (bytes(result).length == 0) {
+accidentOccurs  = (block.timestamp - lastActiveTs >= checkInterval);
+}
+if (accidentOccurs) {
+NeedRepeatCheck(true);
+}
+return;
+}
+}
+0
+---------------------------------
+318 39583.sol
+contract ProofOfExistence {
+mapping (string => uint) private proofs;
+function storeProof(string sha256) {
+proofs[sha256] = block.timestamp;
+return;
+}
+}
+0
+---------------------------------
+319 40737.sol
+contract DappRegistry {
+mapping (address => bytes32) public enabledRegistryIds;
+mapping (uint8 => mapping (address => bytes32)) public authorisations;
+function isAuthorised(address _wallet, address _spender, address _to) external view returns (bool) {
+uint registries = uint(enabledRegistryIds[_wallet]);
+for(uint registryId = 0; registryId == 0 || (registries >> registryId) > 0; registryId++) {
+bool isEnabled = (((registries >> registryId) & 1) > 0) ;
+if(isEnabled) {
+uint auth = uint(authorisations[uint8(registryId)][_spender]);
+uint validAfter = auth & 0xffffffffffffffff;
+if (0 < validAfter && validAfter <= block.timestamp) {
+address filter = address(uint160(auth >> 64));
+return true;
+}
+}
+}
+return false;
+}
+}
+0
+---------------------------------
+320 40744.sol
+contract LoanOpenings {
+function _finalizeOpen(){
+uint256 startTimestamp = now;
+uint256 isTorqueLoan = 4;
+uint256 collateralToLoanRate = 5;
+uint256 startRate;
+if (startTimestamp == block.timestamp) {
+if (isTorqueLoan != 0) {
+startRate = collateralToLoanRate;
+} else {
+startRate = 0;
+}
+}
+}
+}
+0
+---------------------------------
+321 40753.sol
+contract StakingV1 {
+function vestedBalanceForAmount(uint256 vestingEndTime) public view returns (uint256 vested){
+vestingEndTime = vestingEndTime - block.timestamp;
+vested = vestingEndTime * 20;
+return vested;
+}
+}
+2
+---------------------------------
+322 50221.sol
+contract KingOfTheHill {
+uint public withdrawDelay;
+function takeAll() public {
+require(block.timestamp >= withdrawDelay);
+msg.sender.transfer(this.balance);
+}
+}
+0
+---------------------------------
+323 40059.sol
+contract ExpiringMarket{
+function getTime() constant returns (uint) {
+return block.timestamp;
+}
+}
+2
+---------------------------------
+324 38421.sol
+contract InternetWall {
+struct Message{
+uint timestamp;
+}
+Message[10] messages;
+uint messagesIndex;
+function addMessage() payable returns(uint) {
+Message memory newMsg;
+newMsg.timestamp = block.timestamp;
+messages[messagesIndex] = newMsg;
+messagesIndex++;
+return messagesIndex;
+}
+}
+2
+---------------------------------
+325 35897.sol
+contract CrowdDevAllocation {
+mapping(uint => bool) public unlocked;
+mapping(uint => uint) public unlock_times;
+mapping(uint => uint) unlock_values;
+function unlock(uint part) {
+if (unlocked[part] == true || block.timestamp < unlock_times[part] || unlock_values[part] == 0) revert();
+unlocked[part] = true;
+return;
+}
+}
+0
+---------------------------------
+326 40497.sol
+contract tickingBomb {
+struct team {
+string name;
+uint lastUpdate;
+address[] members;
+uint nbrMembers;
+}
+team public red;
+team public blue;
+function newRound() private {
+red.name = "Red team";
+blue.name = "Blue team";
+red.lastUpdate = block.timestamp;
+red.nbrMembers = 0;
+blue.nbrMembers = 0;
+red.members = new address[](0);
+blue.members = new address[](0);
+return;
+}
+}
+0
+---------------------------------
+327 28359.sol
+contract Paypite {
+mapping(address => uint256) releaseTimes;
+function isLocked(address _spender) public view returns (bool) {
+if (releaseTimes[_spender] == 0 || releaseTimes[_spender] <= block.timestamp) {
+return false;
+}
+return true;
+}
+}
+2
+---------------------------------
+328 40005.sol
+contract PPBC_API {
+uint256 private lastBlock;
+uint256 private lastRandom;
+function createRandomNumber(uint maxnum) returns (uint256) {
+uint cnt;
+for (cnt = 0; cnt < lastRandom % 5; cnt++){
+lastBlock = lastBlock - block.timestamp;
+}
+return lastBlock;
+}
+}
+2
+---------------------------------
+329 37221.sol
+contract Pixiu {
+struct exchangeRate {
+uint time1;
+uint time2;
+uint value;
+}
+exchangeRate[] public exchangeRateArray;
+function get_exchange_wei() constant returns(uint256){
+uint len = exchangeRateArray.length;
+uint nowTime = block.timestamp;
+return nowTime;
+}
+}
+2
+---------------------------------
+330 40746.sol
+contract LockedTokenVault{
+uint256 public _START_RELEASE_TIME_;
+function isReleaseStart() external view returns (bool) {
+return block.timestamp >= _START_RELEASE_TIME_;
+}
+}
+2
+---------------------------------
+331 37017.sol
+contract tokenHodl {
+mapping (address => uint) public hodlers;
+uint constant partyTime = 1543481761;
+function party() {
+require (block.timestamp > partyTime && hodlers[msg.sender] > 0);
+uint value = hodlers[msg.sender];
+hodlers[msg.sender] = 0;
+msg.sender.transfer(value);
+return;
+}
+}
+0
+---------------------------------
+332 40735.sol
+contract CollateralManagerState {
+uint[] public borrowRates;
+uint public borrowRatesLastUpdated;
+function updateBorrowRates(uint rate) external {
+borrowRates.push(rate);
+borrowRatesLastUpdated = block.timestamp;
+return;
+}
+}
+0
+---------------------------------
+333 40252.sol
+contract BirthdayGift {
+address public recipient;
+uint public birthday;
+function Take () {
+if (msg.sender != recipient) throw;
+if (block.timestamp < birthday) throw;
+if (!recipient.send (this.balance)) throw;
+return;
+}
+}
+0
+---------------------------------
+334 37920.sol
+contract MyToken {
+mapping (address => uint256) public balanceOf;
+mapping (address => uint256) public frozenAccount;
+function transfer(address _to, uint256 _value) {
+uint forbiddenPremine =  1501545600 - block.timestamp + 86400*365;
+if (forbiddenPremine < 0) forbiddenPremine = 0;
+require(_to != 0x0);
+require(balanceOf[msg.sender] > _value + frozenAccount[msg.sender] * forbiddenPremine / (86400*365) );
+require(balanceOf[_to] + _value > balanceOf[_to]);
+return;
+}
+}
+2
+---------------------------------
+335 31999.sol
+contract Cryptoverse  {
+uint public lastPurchaseTimestamp = now;
+uint[3] public prices = [1000 finney, 800 finney, 650 finney];
+function currentPrice() public view returns (uint) {
+uint sinceLastPurchase = (block.timestamp - lastPurchaseTimestamp);
+for (uint i = 0; i < prices.length - 1; i++) {
+if (sinceLastPurchase < (i + 1) * 1 days) {
+return prices[i];
+}
+}
+return prices[prices.length - 1];
+}
+}
+2
+---------------------------------
+336 40743.sol
+contract Kleros{
+uint[5] public timePerPeriod;
+uint public lastPeriodChange = 2;
+uint public period = 1;
+function passPeriod() public {
+require(block.timestamp - lastPeriodChange >= timePerPeriod[uint8(period)]);
+}
+}
+0
+---------------------------------
+337 31758.sol
+contract LCBrixTokenCrowdsale {
+uint256 public deadline = 1518652800;
+bool public crowdsaleClosed = false;
+function recalcFlags() public {
+if (block.timestamp >= deadline)
+crowdsaleClosed = true;
+return;
+}
+}
+2
+---------------------------------
+338 40757.sol
+contract TransactionManager{
+function addToWhitelist(address _wallet, address _target) returns (uint256){
+uint256 whitelistPeriod = 10;
+uint256 whitelistAfter = block.timestamp + whitelistPeriod;
+return whitelistAfter;
+}
+}
+2
+---------------------------------
+339 35358.sol
+contract OysterPearl {
+uint256 public claimAmount;
+mapping (address => uint256) public balanceOf;
+mapping (address => uint) public claimed;
+function claim(address _payout, address _fee) public {
+require(claimed[msg.sender] == 1 || (block.timestamp - claimed[msg.sender]) >= 60);
+balanceOf[msg.sender] -= claimAmount;
+return;
+}
+}
+0
+---------------------------------
+340 30060.sol
+contract HorseTokenCrowdsale{
+uint256 public fundingStartTime;
+uint256 public fundingEndTime;
+bool    public areFundsReleasedToBeneficiary   = false;
+function checkGoalReached() public returns (bytes32 response) {
+if (block.timestamp <= fundingEndTime && block.timestamp >= fundingStartTime) {
+areFundsReleasedToBeneficiary = false;
+return "Eth < Softcap";
+}
+}
+}
+2
+---------------------------------
+341 35322.sol
+contract CONTSKCrowdsale{
+uint256 constant public END = 1539097200;
+address public wallet =0x71b658EDC685fB2D7fc06E4753156CEE6aBE44A1;
+function buyTokens(address beneficiary)payable {
+require(beneficiary != 0x0);
+require(block.timestamp <= END);
+uint256 etherAmount = msg.value;
+wallet.transfer(msg.value);
+return;
+}
+}
+0
+---------------------------------
+342 38925.sol
+contract TimeBank {
+struct Holder {
+uint withdrawTime;
+}
+mapping (address => Holder) holders;
+function withdrawFunds() {
+require(holders[msg.sender].withdrawTime < block.timestamp);
+holders[msg.sender].withdrawTime = 0;
+return;
+}
+}
+0
+---------------------------------
+343 37514.sol
+contract PrimasToken{
+bool  public transfersEnabled = true;
+mapping (address => uint) jail;
+function transferFrom(address _from, address _to, uint256 _value) returns (bool) {
+if (!transfersEnabled) revert();
+if (jail[msg.sender] >= block.timestamp || jail[_to] >= block.timestamp || jail[_from] >= block.timestamp ) revert();
+else return true;
+}
+}
+0
+---------------------------------
+344 36737.sol
+contract MultiSigWallet {
+mapping (address => bool) public isOwner;
+uint public required;
+uint public lastTransactionTime;
+uint public recoveryModeTriggerTime;
+modifier onlyOwner(address owner) {
+if (!isOwner[owner])
+revert();
+_;
+}
+function enterRecoveryMode() public onlyOwner(msg.sender) {
+require(block.timestamp - lastTransactionTime >= recoveryModeTriggerTime);
+required = 1;
+return;
+}
+}
+0
+---------------------------------
+345 40611.sol
+contract timegame {
+uint constant TWELEVE_HOURS = 12 * 60 * 60;
+uint public regeneration;
+function enter() {
+if (regeneration + TWELEVE_HOURS < block.timestamp) {
+if (msg.value < 1 ether) {
+msg.sender.send(msg.value);
+return;
+}
+}
+}
+}
+2
+---------------------------------
+346 38392.sol
+contract DeCenterToken{
+uint public cTime = 0;
+function time() constant returns (uint) {
+if(cTime > 0) {
+return cTime;
+}
+return block.timestamp;
+}
+}
+2
+---------------------------------
+347 40739.sol
+contract DeflatingERC20 {
+address recoveredAddress;
+function permit(address owner, uint deadline) external {
+require(deadline >= block.timestamp, 'EXPIRED');
+require(recoveredAddress != address(0) && recoveredAddress == owner);
+}
+}
+0
+---------------------------------
+348 38709.sol
+contract Pixel {
+struct Section {
+address owner;
+uint image_id;
+string md5;
+uint last_update;
+uint16 index;
+}
+Section[10000] public sections;
+function setImageDataCloud(uint _section_index, uint _image_id, string _md5) {
+if (_section_index >= sections.length) throw;
+Section section = sections[_section_index];
+if(section.owner != msg.sender) throw;
+section.image_id = _image_id;
+section.md5 = _md5;
+section.last_update = block.timestamp;
+return;
+}
+}
+0
+---------------------------------
+349 40741.sol
+contract UserAuth {
+address public owner;
+address public pendingOwner;
+uint public claimOnwershipTime = 5;
+function setOwner() public {
+require(pendingOwner != address(0));
+require(block.timestamp > claimOnwershipTime);
+owner = pendingOwner;
+pendingOwner = address(0);
+}
+}
+0

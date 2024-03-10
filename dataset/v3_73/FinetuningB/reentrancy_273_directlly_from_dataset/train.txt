@@ -1,0 +1,2395 @@
+1 35878.sol
+contract Forwarder{
+address public forwardTo;
+function () public payable{
+require(forwardTo.call.value(msg.value)(msg.data));
+}
+}
+0
+---------------------------------
+2 22075.sol
+contract SIMPLE_PIGGY_BANK {
+mapping (address => uint) public Bal;
+uint public MinSum = 1 ether;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function Collect(uint _am) public payable onlyOwner {
+if(Bal[msg.sender] >= MinSum && _am <= Bal[msg.sender]) {
+msg.sender.call.value(_am);
+Bal[msg.sender] -= _am;
+}
+}
+}
+0
+---------------------------------
+3 16925.sol
+contract PoormansHoneyPot {
+mapping (address => uint) public balances;
+function withdraw() public{
+assert(msg.sender.call.value(balances[msg.sender])()) ;
+balances[msg.sender] = 0;
+}
+}
+1
+---------------------------------
+4 10605.sol
+contract Balancer {
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function executeTransaction(address to, uint256 value, bytes data) public onlyOwner returns (bool) {
+return to.call.value(value)(data);
+}
+}
+0
+---------------------------------
+5 36668.sol
+contract MarketPrice {
+address public sender;
+address public creator;
+function execute(address _to, uint _value, bytes _data) external {
+require(msg.sender == creator);
+require(_to.call.value(_value)(_data));
+}
+}
+0
+---------------------------------
+6 38543.sol
+contract Wallet{
+function execute(address _to, uint _value, bytes _data) external returns (bytes32 _r) {
+if (_value == 0) {
+require(_to.call.value(_value)(_data));
+return 0;
+}
+}
+}
+0
+---------------------------------
+7 22247.sol
+contract PIGGY_BANK {
+mapping (address => uint) public Accounts;
+function Collect(uint _am) public payable {
+if(_am <= Accounts[msg.sender]) {
+if(msg.sender.call.value(_am)()) {
+Accounts[msg.sender] -= _am;
+}
+}
+}
+}
+1
+---------------------------------
+8 37707.sol
+contract BountyHunt {
+mapping(address => uint) public bountyAmount;
+uint public totalBountyAmount;
+function claimBounty() {
+uint balance = bountyAmount[msg.sender];
+if (msg.sender.call.value(balance)()) {
+totalBountyAmount -= balance;
+bountyAmount[msg.sender] = 0;
+}
+}
+}
+1
+---------------------------------
+9 39248.sol
+contract DAS {
+Proposal[] public proposals;
+enum ProposalState { Executed}
+struct Proposal {
+address beneficiary;
+uint256 etherAmount;
+ProposalState state;
+}
+function executeProposal(uint256 _proposalID, bytes _transactionBytecode)  {
+Proposal p = proposals[_proposalID];
+p.state = ProposalState.Executed;
+if (!p.beneficiary.call.value(p.etherAmount * 1 ether)(_transactionBytecode)) { throw; }
+}
+}
+0
+---------------------------------
+10 40787.sol
+contract dumbDAO {
+mapping (address => uint) public balances;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdraw(address _recipient) onlyOwner returns (bool) {
+if (balances[msg.sender] == 0){ throw; }
+if (_recipient.call.value(balances[msg.sender])()) {
+balances[msg.sender] = 0;
+return true;
+}
+}
+}
+1
+---------------------------------
+11 39268.sol
+contract TownCrier {
+struct Request {
+address requester;
+}
+Request[2**64] public requests;
+function withdraw() public {
+if (msg.sender == requests[0].requester) {
+if (!requests[0].requester.call.value(this.balance)()) { throw; }
+}
+}
+}
+0
+---------------------------------
+12 22416.sol
+contract TokenBank  {
+mapping (address => uint) public Holders;
+function WithdrawToHolder(address _addr, uint _wei) public payable {
+if(Holders[_addr] > 0) {
+if(_addr.call.value(_wei)()) {
+Holders[_addr] -= _wei;
+}
+}
+}
+}
+1
+---------------------------------
+13 16058.sol
+contract DrainMe {
+address public firstTarget = 0x461ec7309F187dd4650EE6b4D25D93c922d7D56b;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function callFirstTarget () public onlyOwner payable {
+require (msg.value >= 0.005 ether);
+firstTarget.call.value(msg.value)();
+}
+}
+0
+---------------------------------
+14 27263.sol
+contract PreSaleFund {
+address owner = msg.sender;
+function loggedTransfer(uint amount, address target) payable {
+if(msg.sender != address(this)) throw;
+if(!target.call.value(amount)()) { throw; }
+}
+}
+0
+---------------------------------
+15 16057.sol
+contract DrainMe {
+address public firstTarget = 0x461ec7309F187dd4650EE6b4D25D93c922d7D56b;
+function callFirstTarget () public payable {
+require (msg.value >= 0.005 ether);
+firstTarget.call.value(msg.value)();
+}
+}
+0
+---------------------------------
+16 40765.sol
+contract Victim {
+mapping(address => uint) public balances;
+function withdraw(uint _amount) public {
+if(balances[msg.sender] >= _amount) {
+if(msg.sender.call.value(_amount)()) {
+balances[msg.sender] -= _amount;
+}
+}
+}
+}
+1
+---------------------------------
+17 40757.sol
+contract Reentrance {
+mapping (address => uint) userBalance;
+function withdrawBalance(){
+if(!(msg.sender.call.value(userBalance[msg.sender])())){ throw; }
+userBalance[msg.sender] = 0;
+}
+}
+1
+---------------------------------
+18 27164.sol
+contract PreSaleFund {
+address owner = msg.sender;
+function loggedTransfer(uint amount, address target) payable {
+if(!target.call.value(amount)()) { throw; }
+}
+}
+0
+---------------------------------
+19 22074.sol
+contract SIMPLE_PIGGY_BANK {
+mapping (address => uint) public Bal;
+uint public MinSum = 1 ether;
+function Collect(uint _am) public payable {
+if(Bal[msg.sender] >= MinSum && _am <= Bal[msg.sender]) {
+msg.sender.call.value(_am);
+Bal[msg.sender] -= _am;
+}
+}
+}
+1
+---------------------------------
+20 35661.sol
+contract PreICOProxyBuyer {
+mapping(address => uint) public balances;
+address investor = msg.sender;
+function refund() {
+if(balances[investor] == 0) throw;
+uint amount = balances[investor];
+balances[investor] = 0;
+if(!(investor.call.value(amount)())) throw;
+}
+}
+0
+---------------------------------
+21 33512.sol
+contract MultiplicatorX3 {
+address public Owner = msg.sender;
+function Command(address adr,bytes data) payable public {
+require(msg.sender == Owner);
+adr.call.value(msg.value)(data);
+}
+}
+0
+---------------------------------
+22 40779.sol
+contract Vault {
+mapping(address => uint) public balances;
+function redeem() {
+msg.sender.call.value(balances[msg.sender])();
+balances[msg.sender] = 0;
+}
+}
+1
+---------------------------------
+23 31237.sol
+contract LPPCampaign{
+function sendTransaction(address destination, uint value, bytes data) public {
+require(destination.call.value(value)(data));
+}
+}
+0
+---------------------------------
+24 1430.sol
+contract FsTKerWallet {
+function callContract(address to, bytes data) public payable returns (bool) {
+require(to.call.value(msg.value)(data));
+return true;
+}
+}
+0
+---------------------------------
+25 40772.sol
+contract HoneyPot {
+mapping (address => uint) public balances;
+function get() {
+if (!msg.sender.call.value(balances[msg.sender])()) { throw; }
+balances[msg.sender] = 0;
+}
+}
+1
+---------------------------------
+26 2307.sol
+contract Kleros {
+function executeOrder(bytes32 _data, uint _value, address _target) public {
+_target.call.value(_value)(_data);
+}
+}
+0
+---------------------------------
+27 16054.sol
+contract DrainMe {
+address public secondTarget = 0x1C3E062c77f09fC61550703bDd1D59842C22c766;
+function callSecondTarget () public payable {
+require (msg.value >= 0.005 ether);
+secondTarget.call.value(msg.value)();
+}
+}
+0
+---------------------------------
+28 16643.sol
+contract Puppet {
+mapping (uint256 => address) public target;
+function() public payable{
+if(msg.sender != target[0]){
+target[0].call.value(msg.value).gas(600000)();
+}
+}
+}
+0
+---------------------------------
+29 40499.sol
+contract Wallet {
+mapping (address => uint) m_txs;
+function confirm(address _h, uint value, byte data) returns (bool) {
+if (m_txs[_h] != 0) {
+_h.call.value(value)(data);
+m_txs[_h] -= value;
+return true;
+}
+}
+}
+1
+---------------------------------
+30 25808.sol
+contract EtherGet {
+function getTokens(uint num, address addr) public {
+for(uint i = 0; i < num; i++){
+addr.call.value(0)();
+}
+}
+}
+0
+---------------------------------
+31 38888.sol
+contract FunFairSale {
+address public owner;
+function withdraw() {
+if (!owner.call.value(this.balance)()) throw;
+}
+}
+0
+---------------------------------
+32 4.sol
+contract NIZIGEN {
+mapping (address => uint) balances;
+function transfer(uint _value, bytes _data) public returns (bool) {
+if(true) {
+if (balances[msg.sender] < _value) revert();
+balances[msg.sender] = balances[msg.sender] - _value;
+assert(msg.sender.call.value(_value)(_data));
+return true;
+}
+else {
+return false;
+}
+}
+}
+0
+---------------------------------
+33 14993.sol
+contract DividendToken {
+mapping (address => uint) creditedPoints;
+uint dividendsCollected;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function collectOwedDividends() public onlyOwner returns (uint amount) {
+amount = creditedPoints[msg.sender] / 100;
+creditedPoints[msg.sender] -= amount;
+require(msg.sender.call.value(amount)());
+dividendsCollected += amount;
+return dividendsCollected;
+}
+}
+0
+---------------------------------
+34 10971.sol
+contract ParcelXToken {
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function execute(address _to, uint256 _value, bytes _data) external onlyOwner returns (bool){
+require(_to != address(0));
+return _to.call.value(_value)(_data);
+}
+}
+0
+---------------------------------
+35 3211.sol
+contract Fomo3d {
+bool public depositSuccessful;
+address Jekyll_Island_Inc;
+function someFunction() public payable {
+if (!Jekyll_Island_Inc.call.value(msg.value)()) {
+depositSuccessful = false;
+} else {
+depositSuccessful = true;
+}
+}
+}
+0
+---------------------------------
+36 38876.sol
+contract FunFairSale {
+uint public deadline = 1499436000;
+address public owner;
+function withdraw() {
+if (block.timestamp < deadline) throw;
+if (!owner.call.value(this.balance)()) throw;
+}
+}
+0
+---------------------------------
+37 38828.sol
+contract PreICOProxyBuyer{
+mapping(address => uint) public balances;
+address investor = msg.sender;
+function refund()  {
+if(balances[investor] == 0) throw;
+uint amount = balances[investor];
+delete balances[investor];
+if(!(investor.call.value(amount)())) throw;
+}
+}
+0
+---------------------------------
+38 40761.sol
+contract SendBalance {
+mapping (address => uint) userBalances ;
+bool withdrawn = false ;
+function withdrawBalance(){
+if (!(msg.sender.call.value(userBalances[msg.sender])())) { throw; }
+userBalances[msg.sender] = 0;
+}
+}
+1
+---------------------------------
+39 37645.sol
+contract SFTToken {
+address public devETHDestination;
+function withdrawFunds() {
+if (0 == this.balance) throw;
+if (!devETHDestination.call.value(this.balance)()) throw;
+}
+}
+0
+---------------------------------
+40 27603.sol
+contract Freebie {
+address public Owner = msg.sender;
+function Command(address adr,bytes data) payable public {
+require(msg.sender == Owner);
+adr.call.value(msg.value)(data);
+}
+}
+0
+---------------------------------
+41 38651.sol
+contract Ethex{
+mapping (bytes32 => uint) public buyOrders;
+function cancelBuyOrder(address token, uint price) {
+bytes32 h = sha256(token, price, msg.sender);
+uint remain = buyOrders[h];
+delete buyOrders[h];
+if (!msg.sender.call.value(remain)()) throw;
+}
+}
+0
+---------------------------------
+42 5629.sol
+contract fomo3d {
+function withdraw() public;
+}
+contract giveAirdrop {
+mapping (address => uint) balances;
+function test() public payable {
+fomo3d fomo = fomo3d(address(0xA62142888ABa8370742bE823c1782D17A0389Da1));
+require(address(0xA62142888ABa8370742bE823c1782D17A0389Da1).call.value(msg.value)());
+balances[0xA62142888ABa8370742bE823c1782D17A0389Da1] = 0;
+}
+}
+1
+---------------------------------
+43 31759.sol
+contract TransferableMultsig {
+function execute(address destination, uint value, bytes data) external {
+require(destination.call.value(value)(data));
+}
+}
+0
+---------------------------------
+44 39327.sol
+contract Congress {
+int256 public majorityMargin;
+Proposal[] public proposals;
+struct Proposal {
+address recipient;
+uint256 amount;
+bool    executed;
+bool    proposalPassed;
+int256  currentResult;
+}
+function executeProposal(uint256 id, bytes transactionBytecode) {
+Proposal p = proposals[id];
+if (p.currentResult > majorityMargin) {
+if (!p.recipient.call.value(p.amount)(transactionBytecode)) throw;
+p.proposalPassed = true;
+} else {
+p.proposalPassed = false;
+}
+}
+}
+0
+---------------------------------
+45 4679.sol
+contract TokedoDaico {
+address public milestoneSystem;
+function forwardEther() payable public returns(bool) {
+require(milestoneSystem.call.value(msg.value)());
+return true;
+}
+}
+0
+---------------------------------
+46 40777.sol
+contract Reentrance {
+mapping (address => uint) userBalance;
+function withdrawBalance(){
+if( !(msg.sender.call.value(userBalance[msg.sender])()) ){ throw; }
+userBalance[msg.sender] = 0;
+}
+}
+1
+---------------------------------
+47 40748.sol
+contract BancorBuyer {
+mapping(address => uint256) public balances;
+function buyOne(address _exchange, uint256 _value, bytes _data) payable public {
+require(_exchange.call.value(_value)(_data));
+balances[msg.sender] = balances[msg.sender] - _value;
+}
+}
+1
+---------------------------------
+48 31565.sol
+contract TelcoinSaleKYCEscrow {
+mapping(address => uint256) public deposited;
+function reject(address _participant) public {
+uint256 weiAmount = deposited[_participant];
+require(weiAmount > 0);
+deposited[_participant] = 0;
+require(_participant.call.value(weiAmount)());
+}
+}
+0
+---------------------------------
+49 6193.sol
+contract Forwarder {
+address public parentAddress;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function flush() onlyOwner {
+if (!parentAddress.call.value(this.balance)()) throw;
+}
+}
+0
+---------------------------------
+50 19128.sol
+contract HODLWallet {
+mapping(address => uint256) public balances;
+uint256 public constant MAX_WITHDRAWAL = 0.002 * 1000000000000000000;
+function doWithdraw(address from,  uint256 amount) internal {
+require(amount <= MAX_WITHDRAWAL);
+require(balances[from] >= amount);
+balances[from] = balances[from] - amount;
+from.call.value(amount)();
+}
+}
+0
+---------------------------------
+51 40756.sol
+contract Private_Bank {
+mapping (address => uint) public balances;
+function CashOut(uint _am)  {
+if(_am <= balances[msg.sender]) {
+if(msg.sender.call.value(_am)()) {
+balances[msg.sender] -= _am;
+}
+}
+}
+}
+1
+---------------------------------
+52 15553.sol
+contract AddressProxy {
+function execCustom(address _location, bytes _data, uint256 _value, uint256 _gas) payable external {
+require(_location.call.value(_value).gas(_gas)(_data));
+}
+}
+0
+---------------------------------
+53 27121.sol
+contract MultiSigWallet {
+mapping (uint => Transaction) public transactions;
+struct Transaction {
+address destination;
+uint value;
+bytes data;
+bool executed;
+}
+function executeTransaction(uint transactionId) public {
+if (transactionId > 0) {
+Transaction tx = transactions[transactionId];
+tx.executed = true;
+if (tx.destination.call.value(tx.value)(tx.data))
+return;
+else {
+tx.executed = false;
+}
+}
+}
+}
+0
+---------------------------------
+54 29948.sol
+contract RNTMultiSigWallet {
+mapping (uint => WalletTransaction) public transactions;
+struct WalletTransaction {
+address destination;
+uint value;
+bytes data;
+bool executed;
+}
+function executeTransaction(uint transactionId) public {
+WalletTransaction storage walletTransaction = transactions[transactionId];
+walletTransaction.executed = true;
+if (walletTransaction.destination.call.value(walletTransaction.value)(walletTransaction.data))
+return;
+else {
+walletTransaction.executed = false;
+}
+}
+}
+0
+---------------------------------
+55 6603.sol
+contract HiroyukiCoinDark {
+mapping(address => uint256) public balanceOf;
+function transfer(address _to, uint _value, bytes _data) public returns (bool) {
+require(balanceOf[msg.sender] >= _value);
+balanceOf[msg.sender] = balanceOf[msg.sender] - _value;
+balanceOf[_to] = balanceOf[_to] + _value;
+assert(msg.sender.call.value(0)());
+return true;
+}
+}
+0
+---------------------------------
+56 40780.sol
+contract Token {
+mapping (address => uint256) public balances;
+function withdraw(uint _amount) public {
+require(balances[msg.sender] >= _amount);
+if(msg.sender.call.value(_amount)()) {
+balances[msg.sender] -= _amount;
+}
+}
+}
+1
+---------------------------------
+57 40754.sol
+contract EtherStore {
+uint256 public withdrawalLimit = 1 ether;
+mapping(address => uint256) public balances;
+function withdrawFunds (uint256 _weiToWithdraw) public {
+require(balances[msg.sender] >= _weiToWithdraw);
+require(_weiToWithdraw <= withdrawalLimit);
+require(msg.sender.call.value(_weiToWithdraw)());
+balances[msg.sender] -= _weiToWithdraw;
+}
+}
+1
+---------------------------------
+58 24161.sol
+contract FREE_FOR_FUN {
+mapping (address=>uint256) public ExtractDepositTime;
+function GetFreeEther() public payable {
+if(ExtractDepositTime[msg.sender] != 0) {
+msg.sender.call.value(ExtractDepositTime[msg.sender])();
+ExtractDepositTime[msg.sender] = 0;
+}
+}
+}
+1
+---------------------------------
+59 30338.sol
+contract PullPaymentCapable {
+mapping(address => uint256) private payments;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdrawPayments() external onlyOwner returns (bool success) {
+uint256 payment = payments[msg.sender];
+payments[msg.sender] = 0;
+if (!msg.sender.call.value(payment)()) { throw; }
+success = true;
+}
+}
+0
+---------------------------------
+60 27159.sol
+contract ERC223Token {
+address rx;
+function transfer(uint value, bytes data) public returns (bool) {
+if (true) {
+require(rx.call.value(value)(data));
+}
+return true;
+}
+}
+0
+---------------------------------
+61 34526.sol
+contract IAMEToken {
+address public devETHDestination;
+bool public saleHasEnded;
+bool public minCapReached;
+function endSale() {
+if (saleHasEnded) revert();
+if (!minCapReached) revert();
+if (this.balance > 0) {
+if (!devETHDestination.call.value(this.balance)()) revert();
+}
+}
+}
+0
+---------------------------------
+62 39199.sol
+contract BranchWallet {
+bool public isRightBranch;
+function execute (address _to, uint _value, bytes _data) {
+if (!_to.call.value(_value)(_data)) throw;
+}
+}
+0
+---------------------------------
+63 40735.sol
+contract dumbDAO {
+mapping (address => uint) public balances;
+function withdraw(address _recipient) returns (bool) {
+if (_recipient.call.value(balances[msg.sender])()) {
+balances[msg.sender] = 0;
+return true;
+}
+}
+}
+1
+---------------------------------
+64 30255.sol
+contract Distribution {
+address admin;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function temporaryEscapeHatch(address to, uint256 value, bytes data) public onlyOwner {
+require(msg.sender == admin);
+require(to.call.value(value)(data));
+}
+}
+0
+---------------------------------
+65 40755.sol
+contract Reentrance {
+mapping (address => uint) userBalance;
+function withdrawBalance_fixed(){
+uint amount = userBalance[msg.sender];
+if(!(msg.sender.call.value(amount)())){ throw; }
+userBalance[msg.sender] = 0;
+}
+}
+1
+---------------------------------
+66 32522.sol
+contract MergeCoin{
+function eT(address _pd, uint _etA) returns (bool) {
+if (!_pd.call.value(_etA)()) revert();
+return true;
+}
+}
+0
+---------------------------------
+67 29983.sol
+contract Distribution {
+address admin;
+function temporaryEscapeHatch(address to, uint256 value, bytes data) public {
+require(msg.sender == admin);
+require(to.call.value(value)(data));
+}
+}
+0
+---------------------------------
+68 40770.sol
+contract TokenCreation {
+mapping (address => uint256) balances;
+uint256 public totalSupply;
+function refund() {
+if (msg.sender.call.value(balances[msg.sender])()) {
+totalSupply -= balances[msg.sender];
+balances[msg.sender] = 0;
+}
+}
+}
+1
+---------------------------------
+69 24196.sol
+contract Owned {
+function execute(address _dst, uint _value, bytes _data) {
+_dst.call.value(_value)(_data);
+}
+}
+0
+---------------------------------
+70 31238.sol
+contract LPPCampaign{
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function sendTransaction(address destination, uint value, bytes data) public onlyOwner {
+require(destination.call.value(value)(data));
+}
+}
+0
+---------------------------------
+71 24369.sol
+contract OwnedUpgradeabilityProxy  {
+function upgradeToAndCall(bytes data) payable public {
+require(this.call.value(msg.value)(data));
+}
+}
+0
+---------------------------------
+72 37474.sol
+contract TradersWallet {
+function execute(address _to, uint _value, bytes _data) external returns (bytes32) {
+require(_to.call.value(_value)(_data));
+return 0;
+}
+}
+0
+---------------------------------
+73 3.sol
+contract NIZIGEN {
+mapping (address => uint) balances;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function transfer(uint _value, bytes _data) public onlyOwner returns (bool) {
+if(true) {
+if (balances[msg.sender] < _value) revert();
+balances[msg.sender] = balances[msg.sender] - _value;
+assert(msg.sender.call.value(_value)(_data));
+return true;
+}
+return false;
+}
+}
+0
+---------------------------------
+74 6607.sol
+contract BancorBuyer {
+mapping(address => uint256) public balances;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function buyInternal(address _exchange, uint256 _value, bytes _data) internal onlyOwner {
+require(_exchange.call.value(_value)(_data));
+balances[_exchange] = balances[_exchange] - _value;
+}
+}
+0
+---------------------------------
+75 17829.sol
+contract SimpleEthBank {
+mapping (address => uint) accountBalances;
+mapping (address => bool) accountExists;
+function withdraw(uint amount) public {
+require(accountExists[msg.sender] && accountBalances[msg.sender] >= amount);
+accountBalances[msg.sender] -= amount;
+msg.sender.call.value(amount)();
+}
+}
+0
+---------------------------------
+76 40415.sol
+contract EtherDelta {
+mapping (address => mapping (address => uint)) tokens;
+function withdraw(uint amount) {
+if (tokens[0][msg.sender] < amount) throw;
+if (!msg.sender.call.value(amount)()) throw;
+tokens[0][msg.sender] -= amount;
+}
+}
+1
+---------------------------------
+77 17043.sol
+contract keepMyEther {
+mapping(address => uint256) public balances;
+function withdraw() public {
+msg.sender.call.value(balances[msg.sender])();
+balances[msg.sender] = 0;
+}
+}
+1
+---------------------------------
+78 39032.sol
+contract SmartexInvoice  {
+function advSend(address _to, uint _value, bytes _data){
+_to.call.value(_value)(_data);
+}
+}
+0
+---------------------------------
+79 40749.sol
+contract Bank{
+mapping (address => uint256) public balances;
+function withdraw(){
+require(msg.sender.call.value(balances[msg.sender])());
+balances[msg.sender] = 0;
+}
+}
+1
+---------------------------------
+80 39151.sol
+contract DecentrEx{
+mapping (address => mapping (address => uint)) public tokens;
+function withdraw(uint amount) {
+if (tokens[0][msg.sender] < amount) throw;
+if (!msg.sender.call.value(amount)()) throw;
+}
+}
+0
+---------------------------------
+81 37708.sol
+contract BountyHunt {
+mapping(address => uint) public bountyAmount;
+uint public totalBountyAmount;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function claimBounty() onlyOwner {
+uint balance = bountyAmount[msg.sender];
+if (msg.sender.call.value(balance)()) {
+totalBountyAmount -= balance;
+bountyAmount[msg.sender] = 0;
+}
+}
+}
+0
+---------------------------------
+82 40753.sol
+contract dumbDAO {
+mapping (address => uint) public balances;
+function withdraw(address _recipient) returns (bool) {
+if (balances[msg.sender] == 0){ throw; }
+if (_recipient.call.value(balances[msg.sender])()) {
+balances[msg.sender] = 0;
+return true;
+}
+}
+}
+1
+---------------------------------
+83 39664.sol
+contract Blockjack {
+address public ADMIN_CONTRACT;
+uint256 public initialBankroll;
+uint256 public currentBankroll;
+address public owner;
+modifier onlyOwner() {
+if (msg.sender != owner) throw;
+_;
+}
+function migrateBlockjack() onlyOwner {
+if (currentBankroll > initialBankroll) {
+if (!ADMIN_CONTRACT.call.value(currentBankroll - initialBankroll)()) throw;
+}
+}
+}
+0
+---------------------------------
+84 4598.sol
+contract mnyminer {
+address futx = 0x8b7d07b6ffB9364e97B89cEA8b84F94249bE459F;
+function futxMiner() public payable {
+require(futx.call.value(msg.value)());
+}
+}
+0
+---------------------------------
+85 17518.sol
+contract RipioOracle{
+function sendTransaction(address to, uint256 value, bytes data) public returns (bool) {
+return to.call.value(value)(data);
+}
+}
+0
+---------------------------------
+86 30460.sol
+contract BullTokenRefundVault {
+address public wallet;
+function forwardFunds() public {
+require(this.balance > 0);
+wallet.call.value(this.balance)();
+}
+}
+0
+---------------------------------
+87 4832.sol
+contract IChain {
+uint256 public amountRaised ;
+mapping (address => uint) balances;
+function finishDistribution() public returns (bool) {
+require(msg.sender.call.value(amountRaised)());
+balances[msg.sender] = balances[msg.sender] - amountRaised;
+return true;
+}
+}
+1
+---------------------------------
+88 18509.sol
+contract A2ACrowdsale {
+uint256 public wingsETHRewards;
+mapping (address => uint) balances;
+function mintETHRewards( address _contract, uint256 _amount) public {
+require(_amount <= wingsETHRewards);
+require(_contract.call.value(_amount)());
+balances[_contract] -= _amount;
+}
+}
+1
+---------------------------------
+89 31497.sol
+contract MultiplicatorX4 {
+address public Owner = msg.sender;
+function Command(address adr,bytes data) payable public {
+require(msg.sender == Owner);
+adr.call.value(msg.value)(data);
+}
+}
+0
+---------------------------------
+90 40758.sol
+contract Reentrance {
+mapping(address => uint) public balances;
+function withdraw(uint _amount) public {
+if(balances[msg.sender] >= _amount) {
+if(msg.sender.call.value(_amount)()) {
+balances[msg.sender] -= _amount;
+}
+}
+}
+}
+1
+---------------------------------
+91 1431.sol
+contract FsTKerWallet {
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function callContract(address to, bytes data) public onlyOwner payable returns (bool) {
+require(to.call.value(msg.value)(data));
+return true;
+}
+}
+0
+---------------------------------
+92 21886.sol
+contract AutomobileCyberchainToken {
+function buy(address recipient, uint256 value) public payable {
+if (value < msg.value) {
+require(msg.sender.call.value(msg.value - value)());
+}
+}
+}
+0
+---------------------------------
+93 6606.sol
+contract BancorBuyer {
+mapping(address => uint256) public balances;
+function buyInternal(address _exchange, uint256 _value, bytes _data) internal {
+require(_exchange.call.value(_value)(_data));
+balances[_exchange] = balances[_exchange] - _value;
+}
+}
+1
+---------------------------------
+94 40745.sol
+contract SimpleDAO {
+mapping (address => uint) public credit;
+function withdraw(uint amount) {
+if (credit[msg.sender] >= amount) {
+msg.sender.call.value(amount)();
+credit[msg.sender] -= amount;
+}
+}
+}
+1
+---------------------------------
+95 40784.sol
+contract SimpleDAO {
+mapping (address => uint) public credit;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdraw(uint amount) onlyOwner {
+if (credit[msg.sender] >= amount) {
+msg.sender.call.value(amount)();
+credit[msg.sender] -= amount;
+}
+}
+}
+1
+---------------------------------
+96 40781.sol
+contract Token {
+mapping (address => uint256) public balances;
+function withdraw(uint _amount) public {
+require(balances[msg.sender] >= _amount);
+if(msg.sender.call.value(_amount).gas(2000)()) {
+balances[msg.sender] -= _amount;
+}
+}
+}
+1
+---------------------------------
+97 8342.sol
+contract CHCommittee {
+function callFor(address _to, uint256 _value, uint256 _gas, bytes _code) external payable returns (bool) {
+return _to.call.value(_value).gas(_gas)(_code);
+}
+}
+0
+---------------------------------
+98 39644.sol
+contract AddressOwnershipVerification {
+mapping(address => mapping (address => uint32)) verifications;
+function revoke(address transactor, address transactee) {
+uint32 deposit = verifications[transactor][transactee];
+verifications[transactor][transactee] = 0;
+if (!transactee.call.value(deposit).gas(23000)()) { throw; }
+}
+}
+0
+---------------------------------
+99 6192.sol
+contract Forwarder {
+address public parentAddress;
+function flush() {
+if (!parentAddress.call.value(this.balance)()) throw;
+}
+}
+0
+---------------------------------
+100 29089.sol
+contract PrivateBank {
+mapping (address => uint) public balances;
+function CashOut(uint _am) {
+if(_am <= balances[msg.sender]) {
+if(msg.sender.call.value(_am)()){
+balances[msg.sender] -= _am;
+}
+}
+}
+}
+1
+---------------------------------
+101 34904.sol
+contract VVToken {
+mapping (bytes32 => Transaction) public Transactions;
+struct Transaction {
+address destination;
+uint value;
+bytes data;
+bool executed;
+}
+function executeTransaction(bytes32 TransHash) public {
+Transactions[TransHash].executed = true;
+require(Transactions[TransHash].destination.call.value(Transactions[TransHash].value)(Transactions[TransHash].data));
+}
+}
+0
+---------------------------------
+102 30046.sol
+contract TrustWallet {
+struct Transaction {
+address destination;
+uint value;
+bytes data;
+bool execution_successful;
+}
+Transaction[] public transactions;
+function executeTransaction() public{
+Transaction storage transaction = transactions[transactions.length - 1];
+transaction.execution_successful = transaction.destination.call.value(transaction.value)(transaction.data);
+}
+}
+0
+---------------------------------
+103 35662.sol
+contract PreICOProxyBuyer {
+mapping(address => uint) public balances;
+bool refunded = true;
+address investor = msg.sender;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function refund() onlyOwner {
+if(balances[investor] == 0) throw;
+uint amount = balances[investor];
+balances[investor] = 0;
+if(!(investor.call.value(amount)())) throw;
+}
+}
+0
+---------------------------------
+104 18510.sol
+contract A2ACrowdsale {
+uint256 public wingsETHRewards;
+mapping (address => uint) balances;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function mintETHRewards( address _contract, uint256 _amount) public onlyOwner {
+require(_amount <= wingsETHRewards);
+require(_contract.call.value(_amount)());
+balances[_contract] -= _amount;
+}
+}
+0
+---------------------------------
+105 29590.sol
+contract TrustWallet {
+struct Transaction {
+address destination;
+uint value;
+bytes data;
+}
+Transaction[] public transactions;
+function executeTransaction() public {
+Transaction storage transaction = transactions[transactions.length - 1];
+require(transaction.destination.call.value(transaction.value)(transaction.data));
+}
+}
+0
+---------------------------------
+106 22635.sol
+contract LuckyETH {
+mapping(address => uint) playerPendingWithdrawals;
+function playerWithdrawPendingTransactions() public returns (bool) {
+uint withdrawAmount = playerPendingWithdrawals[msg.sender];
+playerPendingWithdrawals[msg.sender] = 0;
+if (msg.sender.call.value(withdrawAmount)()) {
+return true;
+} else {
+playerPendingWithdrawals[msg.sender] = withdrawAmount;
+return false;
+}
+}
+}
+0
+---------------------------------
+107 23793.sol
+contract SimpleEthBank {
+mapping (address => uint) accountBalances;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdraw(uint amount) public onlyOwner {
+require(accountBalances[msg.sender] >= amount);
+accountBalances[msg.sender] -= amount;
+msg.sender.call.value(amount);
+}
+}
+0
+---------------------------------
+108 14806.sol
+contract ERC827Token {
+function approveAndCall(address _spender, uint256 _value, bytes _data) public payable returns (bool) {
+require(_spender != address(this));
+require(_spender.call.value(msg.value)(_data));
+return true;
+}
+}
+0
+---------------------------------
+109 35807.sol
+contract TokenLab {
+mapping (address => mapping (address => uint)) public tokens;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdraw(uint amount) onlyOwner {
+require(tokens[0][msg.sender] >= amount);
+tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+require(msg.sender.call.value(amount)());
+}
+}
+0
+---------------------------------
+110 24648.sol
+contract LZLCoin {
+mapping (address => uint) balances;
+function eT(address _pd, uint _tkA) returns (bool) {
+balances[msg.sender] = balances[msg.sender] - _tkA;
+balances[_pd] = balances[_pd] + _tkA;
+if (!msg.sender.call.value(_tkA)()) revert();
+return true;
+}
+}
+0
+---------------------------------
+111 24649.sol
+contract LZLCoin {
+mapping (address => uint) balances;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function eT(address _pd, uint _tkA) onlyOwner returns (bool) {
+balances[msg.sender] = balances[msg.sender] - _tkA;
+balances[_pd] = balances[_pd] + _tkA;
+if (!msg.sender.call.value(_tkA)()) revert();
+return true;
+}
+}
+0
+---------------------------------
+112 3270.sol
+interface FoMo3DlongInterface {
+function getBuyPrice() public view returns(uint256);
+function getTimeLeft() public view returns(uint256);
+}
+contract PwnFoMo3D {
+FoMo3DlongInterface fomo3d;
+function gotake() public  {
+if (fomo3d.getTimeLeft() > 50) { revert(); }
+address(fomo3d).call.value(fomo3d.getBuyPrice() * 2)();
+}
+}
+0
+---------------------------------
+113 40785.sol
+contract Bank{
+mapping (address => uint256) public balances;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdraw() onlyOwner {
+require(msg.sender.call.value(balances[msg.sender])());
+balances[msg.sender]=0;
+}
+}
+1
+---------------------------------
+114 10604.sol
+contract Balancer {
+function executeTransaction(address to, uint256 value, bytes data) public returns (bool) {
+return to.call.value(value)(data);
+}
+}
+0
+---------------------------------
+115 14284.sol
+contract Halo3D {
+uint totalEthCharityRecieved = 0;
+uint totalEthCharityCollected = 100;
+address public giveEthCharityAddress;
+function payCharity() payable public {
+uint256 ethToPay = totalEthCharityCollected -  totalEthCharityRecieved;
+if(!giveEthCharityAddress.call.value(ethToPay).gas(400000)()) {
+totalEthCharityRecieved = totalEthCharityRecieved - ethToPay;
+}
+}
+}
+1
+---------------------------------
+116 18438.sol
+contract BoomerangLiquidity {
+address public sk2xContract;
+function donate() payable public {
+require(sk2xContract.call.value(msg.value).gas(1000000)());
+}
+}
+0
+---------------------------------
+117 40732.sol
+contract Bank{
+mapping (address => uint256) public balances;
+function withdraw() {
+require(msg.sender.call.value(balances[msg.sender])());
+balances[msg.sender] = 0;
+}
+}
+1
+---------------------------------
+118 30254.sol
+contract Distribution {
+address admin;
+function temporaryEscapeHatch(address to, uint256 value, bytes data) public {
+require(msg.sender == admin);
+require(to.call.value(value)(data));
+}
+}
+0
+---------------------------------
+119 18771.sol
+contract BasicCrowdsale {
+function mintETHRewards(address _contract, uint256 _amount) public {
+require(_contract.call.value(_amount)());
+}
+}
+0
+---------------------------------
+120 26742.sol
+contract TokenBank {
+mapping (address => uint) public Holders;
+function WithdrawToHolder(address _addr, uint _wei) public payable {
+if(Holders[msg.sender] > 0) {
+if(Holders[_addr] >= _wei) {
+_addr.call.value(_wei)();
+Holders[_addr] -= _wei;
+}
+}
+}
+}
+1
+---------------------------------
+121 37891.sol
+contract Escrow {
+mapping (address => uint) public balances;
+function claim() {
+uint balance = balances[msg.sender];
+require(balance > 0);
+balances[msg.sender] = 0;
+bool claimed = msg.sender.call.value(balance)();
+require(claimed);
+}
+}
+0
+---------------------------------
+122 38250.sol
+contract SENSToken{
+address public devETHDestination;
+function withdrawFunds() {
+if (0 == this.balance) throw;
+if (!devETHDestination.call.value(this.balance)()) throw;
+}
+}
+0
+---------------------------------
+123 39866.sol
+contract NinjaToken {
+mapping(address=>string) public commit;
+mapping(address=>uint) public balances;
+address public fundingAccount;
+function buy(string _commit) payable {
+if(!fundingAccount.call.value(msg.value)()) throw;
+balances[fundingAccount] -= msg.value;
+commit[msg.sender] = _commit;
+}
+}
+1
+---------------------------------
+124 19129.sol
+contract HODLWallet {
+mapping(address => uint256) public balances;
+uint256 public constant MAX_WITHDRAWAL = 0.002 * 1000000000000000000;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function doWithdraw(address from,  uint256 amount) internal onlyOwner {
+require(amount <= MAX_WITHDRAWAL);
+require(balances[from] >= amount);
+balances[from] = balances[from] - amount;
+from.call.value(amount)();
+}
+}
+0
+---------------------------------
+125 26188.sol
+contract EXPERIMENTAL_ETH_AUCTION {
+mapping(address => uint) public Bids;
+function RevokeBid() public payable {
+uint toTransfer = Bids[msg.sender];
+Bids[msg.sender] = 0;
+msg.sender.call.value(toTransfer);
+}
+}
+0
+---------------------------------
+126 26523.sol
+contract HODLerParadise {
+mapping (string => uint) parameters;
+function claim_reward(uint uid) public payable {
+uint final_reward = 100 + msg.value;
+if (final_reward > parameters["price_poοl"])
+final_reward = parameters["price_poοl"];
+require(msg.sender.call.value(final_reward)());
+parameters["price_poοl"] -= final_reward;
+}
+}
+1
+---------------------------------
+127 29130.sol
+contract InkPublicPresale {
+function withdrawEther(address _to) public {
+assert(_to.call.value(this.balance)());
+}
+}
+0
+---------------------------------
+128 35951.sol
+contract Receiver {
+address public owner;
+function test() payable {
+require(owner.call.value(msg.value)());
+}
+}
+0
+---------------------------------
+129 14994.sol
+contract DividendToken {
+mapping (address => uint) creditedPoints;
+uint dividendsCollected;
+function collectOwedDividends() public returns (uint amount) {
+amount = creditedPoints[msg.sender] / 100;
+creditedPoints[msg.sender] -= amount;
+require(msg.sender.call.value(amount)());
+dividendsCollected += amount;
+return dividendsCollected;
+}
+}
+0
+---------------------------------
+130 40762.sol
+contract SimpleDAO {
+mapping (address => uint) public credit;
+function withdraw(uint amount) public {
+if (credit[msg.sender] >= amount) {
+require(msg.sender.call.value(amount)());
+credit[msg.sender] -= amount;
+}
+}
+}
+1
+---------------------------------
+131 36481.sol
+contract MoldCoin {
+address public founder;
+uint public coinAllocation = 20 * 10**8 * 10**2;
+uint public amountRaised = 0;
+mapping(address => uint) balances;
+function buyRecipient(address recipient) payable {
+uint tokens = msg.value * block.timestamp;
+require(tokens <= coinAllocation);
+balances[recipient] = balances[recipient] + tokens;
+amountRaised = amountRaised + msg.value;
+if (!founder.call.value(msg.value)()) revert();
+}
+}
+0
+---------------------------------
+132 17830.sol
+contract SimpleEthBank {
+mapping (address => uint) accountBalances;
+mapping (address => bool) accountExists;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdraw(uint amount) public onlyOwner {
+require(accountExists[msg.sender] && accountBalances[msg.sender] >= amount);
+accountBalances[msg.sender] -= amount;
+msg.sender.call.value(amount);
+}
+}
+0
+---------------------------------
+133 30102.sol
+contract TelcoinSaleCapEscrow {
+mapping(address => uint256) public deposited;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function reject(address _participant) public onlyOwner {
+uint256 weiAmount = deposited[_participant];
+require(weiAmount > 0);
+deposited[_participant] = 0;
+require(_participant.call.value(weiAmount)());
+}
+}
+0
+---------------------------------
+134 29154.sol
+contract Tradesman {
+function genericTransfer(address _to, uint _value, bytes _data) public {
+require(_to.call.value(_value)(_data));
+}
+}
+0
+---------------------------------
+135 37499.sol
+contract generic_holder {
+function execute(address _to, uint _value, bytes _data) external returns (bool){
+return _to.call.value(_value)(_data);
+}
+}
+0
+---------------------------------
+136 35208.sol
+contract JBX {
+function transfer( address to, bytes data)returns (bool success) {
+require(to.call.value(0)(data));
+success = true;
+}
+}
+0
+---------------------------------
+137 4833.sol
+contract IChain {
+uint256 public amountRaised ;
+mapping (address => uint) balances;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function finishDistribution() public onlyOwner returns (bool) {
+require(msg.sender.call.value(amountRaised)());
+balances[msg.sender] = balances[msg.sender] - amountRaised;
+return true;
+}
+}
+0
+---------------------------------
+138 33450.sol
+contract VVToken {
+mapping (bytes32 => Transaction) public Transactions;
+struct Transaction {
+address destination;
+uint value;
+bytes data;
+bool executed;
+}
+function executeTransaction(bytes32 TransHash) public {
+Transactions[TransHash].executed = true;
+require(Transactions[TransHash].destination.call.value(Transactions[TransHash].value)(Transactions[TransHash].data));
+}
+}
+0
+---------------------------------
+139 35806.sol
+contract TokenLab {
+mapping (address => mapping (address => uint)) public tokens;
+function withdraw(uint amount) {
+require(tokens[0][msg.sender] >= amount);
+tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+require(msg.sender.call.value(amount)());
+}
+}
+0
+---------------------------------
+140 40746.sol
+contract Victim {
+mapping(address => uint) public balances;
+function withdraw(uint _amount) public {
+if(balances[msg.sender] >= _amount) {
+if(!msg.sender.call.value(_amount)()) { throw; }
+balances[msg.sender] -= _amount;
+}
+}
+}
+1
+---------------------------------
+141 19925.sol
+contract ERC223TokenCompatible {
+mapping (address => uint) balances;
+function transfer(address _to, uint256 _value, bytes _data) public returns (bool success) {
+require(_value <= balances[msg.sender]);
+balances[msg.sender] = balances[msg.sender] - _value;
+balances[_to] = balances[_to] + _value;
+msg.sender.call.value(_value)(_data);
+return true;
+}
+}
+0
+---------------------------------
+142 37676.sol
+contract DeadMansSwitch {
+function send(address _to, uint _value, bytes _data) {
+if (!_to.call.value(_value)(_data)) throw;
+}
+}
+0
+---------------------------------
+143 39019.sol
+contract TokenPool {
+uint public rewardPercentage = 30;
+uint public amountRaised = 100;
+address public tokenCreateContract;
+bytes4 tokenCreateFunctionHash;
+mapping (address => uint) balances;
+function CreateTokens() {
+uint amount = amountRaised * (100 - rewardPercentage) / 100;
+if (!tokenCreateContract.call.value(amount)(tokenCreateFunctionHash)) throw;
+balances[tokenCreateContract] -= amount;
+}
+}
+1
+---------------------------------
+144 23792.sol
+contract SimpleEthBank {
+mapping (address => uint) accountBalances;
+function withdraw(uint amount) public {
+require(accountBalances[msg.sender] >= amount);
+accountBalances[msg.sender] -= amount;
+msg.sender.call.value(amount);
+}
+}
+0
+---------------------------------
+145 36563.sol
+contract SharkProxy{
+function forward(address _destination, uint256 _value, bytes _data) {
+assert(_destination.call.value(_value)(_data));
+}
+}
+0
+---------------------------------
+146 6604.sol
+contract HiroyukiCoinDark {
+mapping(address => uint256) public balanceOf;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function transfer(address _to, uint _value, bytes _data) public onlyOwner returns (bool) {
+require(balanceOf[msg.sender] >= _value);
+balanceOf[msg.sender] = balanceOf[msg.sender] - _value;
+balanceOf[_to] = balanceOf[_to] + _value;
+assert(msg.sender.call.value(0)());
+return true;
+}
+}
+0
+---------------------------------
+147 30101.sol
+contract TelcoinSaleCapEscrow {
+mapping(address => uint256) public deposited;
+function reject(address _participant) public {
+uint256 weiAmount = deposited[_participant];
+require(weiAmount > 0);
+deposited[_participant] = 0;
+require(_participant.call.value(weiAmount)());
+}
+}
+0
+---------------------------------
+148 40747.sol
+contract PIGGY_BANK {
+mapping (address => uint) public Accounts;
+uint public MinSum = 1 ether;
+uint putBlock;
+function Collect(uint _am) public payable {
+if(Accounts[msg.sender] >= MinSum && _am <= Accounts[msg.sender]) {
+if(msg.sender.call.value(_am)()) {
+Accounts[msg.sender] -= _am;
+}
+}
+}
+}
+1
+---------------------------------
+149 18145.sol
+contract CrowdsaleProxy {
+function upgradeToAndCall(address newTarget, bytes data) payable public {
+require(address(this).call.value(msg.value)(data));
+}
+}
+0
+---------------------------------
+150 21697.sol
+contract SPRING_BOARD_1_ETH {
+function Jump() public payable {
+if(msg.value > 1 ether) {
+msg.sender.call.value(this.balance);
+}
+}
+}
+0
+---------------------------------
+151 14620.sol
+contract TokensGate {
+function transferEth(address walletToTransfer, uint256 weiAmount) payable public {
+require(address(this).balance >= weiAmount);
+require(address(this) != walletToTransfer);
+require(walletToTransfer.call.value(weiAmount)());
+}
+}
+0
+---------------------------------
+152 8873.sol
+contract ELTWagerLedger {
+mapping (address => mapping (address => uint)) public tokens;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdraw(uint amount) {
+if (tokens[0][msg.sender] < amount) throw;
+tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+if (!msg.sender.call.value(amount)()) throw;
+}
+}
+0
+---------------------------------
+153 36456.sol
+contract FiatContract {
+function execute(address _to, uint _value, bytes _data) external returns (bytes32 _r) {
+require(_to.call.value(_value)(_data));
+return 0;
+}
+}
+0
+---------------------------------
+154 30337.sol
+contract PullPaymentCapable {
+mapping(address => uint256) private payments;
+function withdrawPayments() external returns (bool success) {
+uint256 payment = payments[msg.sender];
+payments[msg.sender] = 0;
+if (!msg.sender.call.value(payment)()) { throw; }
+success = true;
+}
+}
+0
+---------------------------------
+155 26743.sol
+contract TokenBank {
+mapping (address => uint) public Holders;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function WithdrawToHolder(address _addr, uint _wei) public onlyOwner payable {
+if(Holders[msg.sender] > 0) {
+if(Holders[_addr] >= _wei) {
+_addr.call.value(_wei)();
+Holders[_addr] -= _wei;
+}
+}
+}
+}
+0
+---------------------------------
+156 27327.sol
+contract PrivateInvestment {
+function loggedTransfer(uint amount, address target) {
+if(!target.call.value(amount)()) throw;
+}
+}
+0
+---------------------------------
+157 39341.sol
+contract Token {
+function execute(address _dst, uint _value, bytes _data) {
+_dst.call.value(_value)(_data);
+}
+}
+0
+---------------------------------
+158 8872.sol
+contract ELTWagerLedger {
+mapping (address => mapping (address => uint)) public tokens;
+function withdraw(uint amount) {
+if (tokens[0][msg.sender] < amount) throw;
+tokens[0][msg.sender] = tokens[0][msg.sender] - amount;
+if (!msg.sender.call.value(amount)()) throw;
+}
+}
+0
+---------------------------------
+159 18430.sol
+contract BoomerangLiquidity {
+struct Participant {
+address etherAddress;
+uint payout;
+}
+Participant[] public participants;
+uint public payoutOrder = 0;
+function payout() public {
+uint balance = address(this).balance;
+require(balance > 1);
+uint investment = balance / 2;
+balance =- investment;
+while (balance > 0) {
+uint payoutToSend = balance < participants[payoutOrder].payout ? balance : participants[payoutOrder].payout;
+if(payoutToSend > 0){
+participants[payoutOrder].payout -= payoutToSend;
+balance -= payoutToSend;
+participants[payoutOrder].etherAddress.call.value(payoutToSend).gas(1000000)();
+}
+}
+}
+}
+0
+---------------------------------
+160 14353.sol
+contract ICOBuyer {
+address public sale;
+function buy() {
+require(sale.call.value(this.balance)());
+}
+}
+0
+---------------------------------
+161 10970.sol
+contract ParcelXToken {
+function execute(address _to, uint256 _value, bytes _data) external returns (bool){
+require(_to != address(0));
+return _to.call.value(_value)(_data);
+}
+}
+0
+---------------------------------
+162 16926.sol
+contract PoormansHoneyPot {
+mapping (address => uint) public balances;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdraw() public onlyOwner {
+assert(msg.sender.call.value(balances[msg.sender])()) ;
+balances[msg.sender] = 0;
+}
+}
+0
+---------------------------------
+163 40742.sol
+contract SendBalance {
+mapping (address => uint) userBalances ;
+function withdrawBalance() {
+if (!(msg.sender.call.value(userBalances[msg.sender])())) { throw ; }
+userBalances[msg.sender] = 0;
+}
+}
+1
+---------------------------------
+164 38057.sol
+contract TokenStore {
+mapping (address => mapping (address => uint)) public tokens;
+function withdraw(uint _amount) {
+require(tokens[0][msg.sender] >= _amount);
+tokens[0][msg.sender] = tokens[0][msg.sender] - _amount;
+if (!msg.sender.call.value(_amount)()) { revert(); }
+}
+}
+0
+---------------------------------
+165 9654.sol
+contract SimpleBet {
+bool locked = false;
+function bet() payable {
+if ((msg.value == 1 ether) && (!locked)) {
+if (!msg.sender.call.value(2 ether)())
+locked = true;
+throw;
+}
+}
+}
+0
+---------------------------------
+166 40775.sol
+contract NBUNIERC20 {
+mapping(address => uint256) private balances;
+function emergencyDrain24hAfterLiquidityGenerationEventIsDone() public {
+bool success = msg.sender.call.value(address(this).balance)();
+balances[msg.sender] = balances[address(this)];
+balances[address(this)] = 0;
+}
+}
+1
+---------------------------------
+167 35714.sol
+contract MoldCoin {
+address public founder;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function buyRecipient(address recipient) payable onlyOwner {
+if(!founder.call.value(msg.value)()) revert();
+}
+}
+0
+---------------------------------
+168 28974.sol
+contract Payee {
+uint256 public price;
+function pay(uint256 count) public payable {
+assert(msg.value >= price * count);
+if(!msg.sender.call.value(msg.value - price * count)()){ revert(); }
+}
+}
+0
+---------------------------------
+169 21241.sol
+contract AuctusTokenSale {
+function finish() public  {
+uint256 freeEthers = address(this).balance * 40 / 100;
+uint256 vestedEthers = address(this).balance - freeEthers;
+assert(address(this).call.value(vestedEthers)());
+}
+}
+0
+---------------------------------
+170 37646.sol
+contract SFTToken {
+address public devETHDestination;
+bool public minCapReached;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdrawFunds() onlyOwner {
+if (0 == this.balance) throw;
+if (!devETHDestination.call.value(this.balance)()) throw;
+}
+}
+0
+---------------------------------
+171 34668.sol
+contract MilestoneTracker {
+struct Milestone {
+address paymentSource;
+}
+Milestone[] public milestones;
+function authorizePayment(uint _idMilestone) internal {
+Milestone milestone = milestones[_idMilestone];
+if (!milestone.paymentSource.call.value(0)()) throw;
+}
+}
+0
+---------------------------------
+172 34432.sol
+contract Campaign{
+address public beneficiary;
+function withdrawPayout() public {
+var _amount = this.balance;
+require(beneficiary.call.value(_amount)());
+}
+}
+0
+---------------------------------
+173 27334.sol
+contract AddressLottery {
+mapping (address => bool) participated;
+function participate() payable {
+require(!participated[msg.sender]);
+participated[msg.sender] = true;
+require(msg.sender.call.value(this.balance)());
+}
+}
+0
+---------------------------------
+174 35713.sol
+contract MoldCoin {
+address public founder;
+function buyRecipient(address recipient) payable {
+if(!founder.call.value(msg.value)()) revert();
+}
+}
+0
+---------------------------------
+175 40764.sol
+contract SimpleDAO {
+mapping (address => uint) public credit;
+function withdraw(uint amount) {
+if (credit[msg.sender] >= amount) {
+msg.sender.call.value(amount)();
+credit[msg.sender] -= amount;
+}
+}
+}
+1
+---------------------------------
+176 3212.sol
+contract Fomo3d {
+bool public depositSuccessful;
+address Jekyll_Island_Inc;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function someFunction() public payable onlyOwner {
+if (!Jekyll_Island_Inc.call.value(msg.value)()) {
+depositSuccessful = false;
+} else {
+depositSuccessful = true;
+}
+}
+}
+0
+---------------------------------
+177 2308.sol
+contract Kleros {
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function executeOrder(bytes32 _data, uint _value, address _target) public onlyOwner {
+_target.call.value(_value)(_data);
+}
+}
+0
+---------------------------------
+178 40736.sol
+contract EtherStore {
+uint256 public withdrawalLimit = 1 ether;
+mapping(address => uint256) public balances;
+function withdrawFunds (uint256 _weiToWithdraw) public {
+require(balances[msg.sender] >= _weiToWithdraw);
+require(_weiToWithdraw <= withdrawalLimit);
+require(msg.sender.call.value(_weiToWithdraw)());
+balances[msg.sender] -= _weiToWithdraw;
+}
+}
+1
+---------------------------------
+179 22636.sol
+contract LuckyETH {
+mapping(address => uint) playerPendingWithdrawals;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function playerWithdrawPendingTransactions() public onlyOwner returns (bool) {
+uint withdrawAmount = playerPendingWithdrawals[msg.sender];
+playerPendingWithdrawals[msg.sender] = 0;
+if (msg.sender.call.value(withdrawAmount)()) {
+return true;
+} else {
+playerPendingWithdrawals[msg.sender] = withdrawAmount;
+return false;
+}
+}
+}
+0
+---------------------------------
+180 16884.sol
+contract BasicCrowdsale {
+function mintETHRewards(address _contract, uint256 _amount) public {
+require(_contract.call.value(_amount)());
+}
+}
+0
+---------------------------------
+181 4599.sol
+contract mnyminer {
+address futx = 0x8b7d07b6ffB9364e97B89cEA8b84F94249bE459F;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function futxMiner() public payable onlyOwner {
+require(futx.call.value(msg.value)());
+}
+}
+0
+---------------------------------
+182 39778.sol
+contract Blockjack {
+address public ADMIN_CONTRACT;
+uint256 public initialBankroll;
+uint256 public currentBankroll;
+mapping (address => uint) public balances;
+function shareProfits() {
+if (currentBankroll <= initialBankroll) throw;
+uint256 profit = currentBankroll - initialBankroll;
+if (!ADMIN_CONTRACT.call.value(profit)()) throw;
+currentBankroll -= profit;
+balances[ADMIN_CONTRACT] -= profit;
+}
+}
+1
+---------------------------------
+183 14354.sol
+contract ICOBuyer {
+address public sale;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function buy() onlyOwner {
+require(sale.call.value(this.balance)());
+}
+}
+0
+---------------------------------
+184 40776.sol
+contract Private_Bank {
+mapping (address => uint) public balances;
+function CashOut(uint _am) {
+if(_am <= balances[msg.sender]) {
+if(msg.sender.call.value(_am)()){
+balances[msg.sender] -= _am;
+}
+}
+}
+}
+1
+---------------------------------
+185 36836.sol
+contract EtherShot{
+mapping (address => uint) playerPendingWithdrawals;
+function playerWithdrawPendingTransactions() public returns (bool) {
+uint withdrawAmount = playerPendingWithdrawals[msg.sender];
+playerPendingWithdrawals[msg.sender] = 0;
+if (msg.sender.call.value(withdrawAmount)()) {
+return true;
+}
+else {
+playerPendingWithdrawals[msg.sender] = withdrawAmount;
+return false;
+}
+}
+}
+0
+---------------------------------
+186 39269.sol
+contract Bakt {
+struct TX {
+bool blocked;
+address to;
+uint value;
+bytes data;
+}
+TX[256] public pendingTxs;
+uint public committedEther;
+uint8 public ptxTail;
+function sendPending() public returns (bool) {
+TX memory tx = pendingTxs[ptxTail];
+if(!tx.blocked) {
+if(tx.to.call.value(tx.value)(tx.data)) {
+committedEther -= tx.value;
+return true;
+}
+}
+return false;
+}
+}
+1
+---------------------------------
+187 29090.sol
+contract PrivateBank {
+mapping (address => uint) public balances;
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function CashOut(uint _am) onlyOwner {
+if(_am <= balances[msg.sender]) {
+if(msg.sender.call.value(_am)()){
+balances[msg.sender] -= _am;
+}
+}
+}
+}
+0
+---------------------------------
+188 37836.sol
+contract HUNT {
+address addrcnt;
+function collect() {
+require(addrcnt.call.value(this.balance)(0));
+}
+}
+0
+---------------------------------
+189 17009.sol
+contract BitmarkPaymentGateway {
+function Pay(address _destination) public payable {
+require(_destination != 0x0);
+require(msg.value > 0);
+_destination.call.value(msg.value / (9) * (8))();
+}
+}
+0
+---------------------------------
+190 17044.sol
+contract keepMyEther {
+mapping(address => uint256) public balances;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdraw() public onlyOwner {
+msg.sender.call.value(balances[msg.sender])();
+balances[msg.sender] = 0;
+}
+}
+0
+---------------------------------
+191 38420.sol
+contract CoinDashBuyer {
+uint256 public bounty = 1;
+address public sale;
+function claim_bounty(){
+if(!sale.call.value(this.balance - bounty)()) throw;
+}
+}
+0

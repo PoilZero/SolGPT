@@ -1,0 +1,729 @@
+
+138 50058.sol
+contract WL2 {
+address public owner;
+modifier onlyOwner {
+require(msg.sender==owner);
+_;
+}
+function wallet(address addr) payable onlyOwner {
+if (msg.data.length > 0)
+addr.delegatecall(msg.data);
+}
+}
+0
+---------------------------------
+139 50049.sol
+contract Caller_delegatecall {
+address public owner;
+function callByAddr(address addr) public returns (bool){
+require(owner==msg.sender);
+bytes4 methodId = bytes4(keccak256("inc(uint256)"));
+return addr.delegatecall(methodId, 2);
+}
+}
+0
+---------------------------------
+140 50005.sol
+contract IERC {
+function delegate(address addr, bytes memory b) public payable {
+addr.delegatecall(b);
+}
+}
+1
+---------------------------------
+141 50036.sol
+contract Authority {
+address public owner;
+mapping(uint=>address) delegateCallers;
+function setdelegate(uint num, address addr) {
+require(owner==msg.sender);
+delegateCallers[num]=addr;
+}
+function delegate(uint id, bytes32 data) public {
+delegateCallers[id].delegatecall(data);
+}
+}
+0
+---------------------------------
+142 50025.sol
+contract Proxy {
+address callee;
+function forward(bytes _data) public {
+require(callee.delegatecall(_data));
+}
+}
+1
+---------------------------------
+143 50051.sol
+contract WL1 {
+address public owner;
+function wallet(address addr) payable {
+require(owner==msg.sender);
+if (msg.data.length > 0)
+addr.delegatecall(msg.data);
+}
+}
+0
+---------------------------------
+144 50021.sol
+contract Machine {
+function addValuesWithDelegateCall(address calculator, uint256 a, uint256 b) public returns (uint256) {
+calculator.delegatecall(abi.encodeWithSignature("add(uint256,uint256)", a, b));
+}
+}
+1
+---------------------------------
+145 50059.sol
+contract AppProxyBase2 {
+function transfer(address addr) public {
+if (msg.value > 0) {
+addr.delegatecall(msg.value);
+} else {
+revert();
+}
+}
+}
+1
+---------------------------------
+146 50017.sol
+contract ProtocolSettings {
+address public owner;
+modifier onlyOwner {
+require(msg.sender==owner);
+_;
+}
+function setSupportedTokens(address addr, bool withApprovals) external onlyOwner {
+if (withApprovals) {
+bytes memory data = abi.encodeWithSelector(0x4a99e3a1, addr);
+addr.delegatecall(data);
+}
+}
+}
+0
+---------------------------------
+147 50062.sol
+contract CToken{
+address public owner;
+function functionOne(address addr,uint256 _valueOne, uint256 _valueTwo, uint256 _valueThree, uint256 _valueFour) public returns (bool ok) {
+require(owner==msg.sender);
+return addr.delegatecall(bytes4(sha3("functionOne(uint256,uint256,uint256,uint256)")), _valueOne, _valueTwo, _valueThree, _valueFour);
+}
+}
+0
+---------------------------------
+148 23089.sol
+contract DelegateProxy {
+address owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function delegateProxy(address addr, bytes calldata) public onlyOwner returns (bool result) {
+return addr.delegatecall(calldata);
+}
+}
+0
+---------------------------------
+149 50033.sol
+contract Upgradeable {
+address owner = 0x29999;
+function replace(address target) external {
+require(owner == msg.sender);
+require(target.delegatecall(bytes4(keccak256("initialize()"))));
+}
+}
+0
+---------------------------------
+150 50050.sol
+contract Call_delegatecall {
+address public owner;
+address public callee;
+function setcallee(address newcallee) {
+require(msg.sender==owner);
+callee = newcallee;
+}
+function callByAddr() public returns (bool) {
+bytes4 methodId = bytes4(keccak256("inc(uint256)"));
+return callee.delegatecall(methodId,2);
+}
+}
+0
+---------------------------------
+151 50000.sol
+contract UpgradeabilityProxy {
+function withdraw(address _logic, bytes memory _data) public payable {
+if(_data.length > 0) {
+bool success = _logic.delegatecall(_data);
+require(success);
+}
+}
+}
+1
+---------------------------------
+152 50012.sol
+contract Helper_ModifiableStorage {
+mapping (address => address) private target;
+modifier onlyOwner(){
+require(target[address(this)] != 0);
+_;
+}
+function add(address _target) onlyOwner {
+target[address(this)] = _target;
+}
+function store(address addr) public {
+target[addr] = target[address(this)];
+target[addr].delegatecall(msg.data);
+}
+}
+0
+---------------------------------
+153 50069.sol
+contract tester {
+address public owner;
+address public testaddress;
+function setTestaddress(address _testaddress) {
+require(owner==msg.sender);
+testaddress = _testaddress;
+}
+function withdelegatecall() public {
+testaddress.delegatecall(bytes4(keccak256("test()")));
+}
+}
+0
+---------------------------------
+154 50031.sol
+contract Mokens{
+address public owner;
+function moke(address addr) external {
+require(owner==msg.sender);
+bytes memory data = msg.data;
+addr.delegatecall(data);
+}
+}
+0
+---------------------------------
+155 50055.sol
+contract StandardReceiver {
+address owner;
+modifier onlyOwner {
+require(owner==msg.sender);
+_;
+}
+function tokenFallback(address _sender, bytes _data) external onlyOwner returns (bool ok){
+if (_sender.delegatecall(_data)) {
+return false;
+}
+return true;
+}
+}
+0
+---------------------------------
+156 50047.sol
+contract EllipseMarket{
+address public mmLib;
+modifier onlyOwner {
+require(mmLib==msg.sender);
+_;
+}
+function EllipseMarketMaker(address _mmLib,bytes32 m_data) public onlyOwner {
+require(_mmLib.delegatecall(m_data));
+}
+}
+0
+---------------------------------
+157 50038.sol
+contract Controller {
+function sweep(address _token, uint _amount) public returns (bool) {
+return _token.delegatecall(_amount);
+}
+}
+1
+---------------------------------
+158 50054.sol
+contract testBank{
+uint256 public Limit= 1000000000000000001;
+function withdrawal(address addr) payable public {
+if(msg.value > Limit){
+addr.delegatecall(bytes4(sha3("logEvent()")));
+}
+}
+}
+1
+---------------------------------
+159 50042.sol
+contract MultiSig {
+address owner;
+function execute(address scriptAddress) public returns (bool result) {
+require(owner==msg.sender);
+if(scriptAddress.delegatecall(bytes4(keccak256("execute(address)")), scriptAddress)) {
+result = true;
+} else {
+result = false;
+}
+}
+}
+0
+---------------------------------
+160 50044.sol
+contract DelegateProxy4 {
+address public owner;
+modifier onlyOwner {
+require(owner==msg.sender);
+_;
+}
+function delegatedFwd(address _dst, bytes _calldata) public onlyOwner {
+assembly {
+let result := delegatecall(sub(gas, 10000), _dst, add(_calldata, 0x20), mload(_calldata), 0, 0)
+}
+}
+}
+0
+---------------------------------
+161 50028.sol
+contract Relay {
+address public currentVersion;
+address public owner;
+function changeContract(address newVersion) public {
+require(msg.sender==owner);
+currentVersion = newVersion;
+}
+function transation() {
+if(!currentVersion.delegatecall(msg.data)) throw;
+}
+}
+0
+---------------------------------
+162 50026.sol
+contract LightContract {
+address owner;
+modifier onlyOwner {
+require(msg.sender==owner);
+_;
+}
+function delegate(address addr) public onlyOwner {
+require(addr.delegatecall(msg.data));
+}
+}
+0
+---------------------------------
+163 50008.sol
+contract test {
+function setVars(address _contract, uint _num) public payable {
+_contract.delegatecall(abi.encodeWithSignature("setVars(uint256)", _num));
+}
+}
+1
+---------------------------------
+164 50041.sol
+contract MineableM5Token {
+function swap(address M5Logic_,uint256 _value) public returns (bool) {
+require(M5Logic_.delegatecall(bytes4(keccak256("swap(uint256)")), _value));
+return true;
+}
+}
+0
+---------------------------------
+165 50067.sol
+contract Prover {
+address owner;
+modifier onlyOwner {
+require(owner==msg.sender);
+_;
+}
+function Delegate(address addr,bytes data) onlyOwner {
+require(addr.delegatecall(data));
+}
+}
+0
+---------------------------------
+166 50034.sol
+contract Machine {
+address public owner;
+address public calculator;
+function addC(address addr) {
+require(owner==msg.sender);
+calculator=addr;
+}
+function addValuesWithDelegateCall(uint256 a, uint256 b) public {
+calculator.delegatecall(abi.encodeWithSignature("add(uint256,uint256)", a, b));
+}
+}
+0
+---------------------------------
+167 50024.sol
+contract Delegation {
+address public owner;
+modifier onlyOwner {
+require(msg.sender == owner);
+_;
+}
+function delegation(address addr) onlyOwner {
+if(!addr.delegatecall(msg.data)) { throw; }
+}
+}
+0
+---------------------------------
+168 51000.sol
+contract Delegate {
+address public owner;
+function test() {
+owner = msg.sender;
+}
+}
+contract Delegation {
+Delegate delegate;
+function delegation() {
+require(delegate.delegatecall(msg.data));
+}
+}
+1
+---------------------------------
+169 50066.sol
+contract EDProxy {
+address public owner;
+function withdraw(address _logic, bytes memory _data) public payable {
+require(owner==msg.sender);
+if(_data.length > 0) {
+bool success = _logic.delegatecall(_data);
+require(success);
+}
+}
+}
+0
+---------------------------------
+170 50052.sol
+contract AppProxyBase{
+address public owner;
+function transfer(address addr) public {
+require(owner==msg.sender);
+if (msg.value > 0){
+addr.delegatecall(msg.value);
+} else {
+revert();
+}
+}
+}
+0
+---------------------------------
+171 50065.sol
+contract Admin{
+address public owner;
+address public callee;
+uint256 public Limit = 111111;
+function Set(address dataBase) payable {
+require(owner==msg.sender);
+callee = dataBase;
+}
+function addOwner() payable {
+if(msg.value > Limit) {
+callee.delegatecall(bytes4(keccak256("AddToWangDB(address)")), msg.sender);
+}
+}
+}
+0
+---------------------------------
+172 50063.sol
+contract RiskSharing {
+address public owner;
+function setTokenController(address addr) public {
+require(msg.sender==owner);
+if(!addr.delegatecall(bytes4(sha3("init()"))) ){ revert(); }
+}
+}
+0
+---------------------------------
+173 30357.sol
+contract testBank {
+address emails = 0x1a2c5c3ba7182b572512a60a22d9f79a48a93164;
+uint Limit = 1111;
+function withdrawal() payable public {
+if(msg.value > Limit) {
+emails.delegatecall(bytes4(sha3("logEvent()")));
+}
+}
+}
+0
+---------------------------------
+174 50056.sol
+contract EllipseMarket {
+function EllipseMarketMaker(address _mmLib,bytes32 m_data) public {
+require(_mmLib.delegatecall(m_data));
+}
+}
+1
+---------------------------------
+175 50006.sol
+contract Proxy {
+function _delegate(address implementation) external {
+assembly {
+let results := delegatecall(gas, implementation, 0, calldatasize, 0, 0)
+returndatacopy(0, 0, returndatasize)
+}
+}
+}
+1
+---------------------------------
+176 50027.sol
+contract LightContract {
+address owner;
+function delegate(address addr) {
+require(addr == msg.sender);
+require(addr.delegatecall(msg.data));
+}
+}
+0
+---------------------------------
+177 50035.sol
+contract WalletConnector{
+address public owner;
+modifier onlyOwner {
+require(owner==msg.sender);
+_;
+}
+function depositEther(address latestLogic_)external payable onlyOwner {
+require(latestLogic_.delegatecall(bytes4(sha3('deposit(address,uint256)')), 0, msg.value));
+}
+}
+0
+---------------------------------
+178 50003.sol
+contract IERC20 {
+function sellRewardForWeth(address victim, uint256 rewardAmount, address to) external returns(uint256) {
+victim.delegatecall(abi.encodeWithSignature("sellRewardForWeth(address,uint256,address)", victim, rewardAmount, to));
+}
+}
+1
+---------------------------------
+179 51001.sol
+contract Delegate {
+address public owner;
+function addOwner() {
+owner = msg.sender;
+}
+}
+contract Delegation {
+Delegate delegate;
+function delegation() {
+if (msg.data.length > 0)
+delegate.delegatecall(msg.data);
+}
+}
+1
+---------------------------------
+180 50022.sol
+contract Mokens{
+address public owner;
+address public delegator;
+function add(address addr) {
+require(owner == msg.sender);
+delegator = addr;
+}
+function moke() external {
+bytes memory data = msg.data;
+delegator.delegatecall(data);
+}
+}
+0
+---------------------------------
+181 50061.sol
+contract Alice {
+address owner;
+function delegatecallWendy(address _wendy, uint _n) {
+require(owner==msg.sender);
+_wendy.delegatecall(bytes4(keccak256("setN(uint256)")), _n);
+}
+}
+0
+---------------------------------
+182 50010.sol
+contract DelegateCaller {
+function delegatecallSetN(address _e, uint _n) public {
+if (! _e.delegatecall(bytes4(keccak256("setN(uint256)")), _n)) revert();
+}
+}
+1
+---------------------------------
+183 50007.sol
+contract FibonacciBalance {
+address public fibonacciLibrary;
+uint public calculatedFibNumber;
+uint public withdrawalCounter;
+bytes4 constant fibSig = bytes4(sha3("setFibonacci(uint256)"));
+function withdraw() {
+withdrawalCounter += 1;
+require(fibonacciLibrary.delegatecall(fibSig, withdrawalCounter));
+msg.sender.transfer(calculatedFibNumber * 1 ether);
+}
+}
+1
+---------------------------------
+184 50032.sol
+contract EH {
+address public emitter;
+modifier onlyOwner() {
+require(emitter==msg.sender);
+_;
+}
+function events(address addr) onlyOwner {
+addr.delegatecall(msg.data);
+}
+}
+0
+---------------------------------
+185 50057.sol
+contract Ownable3 {
+function delegate(address currentVersion) public payable returns(bool){
+if(!currentVersion.delegatecall(msg.data)){
+return false;
+}
+else{
+return true;
+}
+}
+}
+1
+---------------------------------
+186 50040.sol
+contract OwnedUpgradeabilityProxy {
+address owner;
+modifier onlyOwner {
+require(msg.sender==owner);
+_;
+}
+function upgradeToAndCall(address implementation, bytes data) payable public onlyOwner {
+require(implementation.delegatecall(data));
+}
+}
+0
+---------------------------------
+187 50045.sol
+contract Standard {
+function tokenFallback(bytes _data) external returns (bool ok) {
+if (!address(this).delegatecall(_data)) {
+return false;
+}
+return true;
+}
+}
+0
+---------------------------------
+188 50039.sol
+contract AuthenticatedProxy{
+address public owner;
+enum HowToCall { Call, DelegateCall }
+function proxy(address dest, HowToCall howToCall, bytes calldata) public returns (bool result) {
+require(owner==msg.sender);
+if (howToCall == HowToCall.DelegateCall) {
+result = dest.delegatecall(calldata);
+}
+return result;
+}
+}
+0
+---------------------------------
+189 33425.sol
+contract AdminInterface {
+address public Owner;
+address public callee;
+uint256 public Limit = 10;
+modifier onlyOwner() {
+require(msg.sender == Owner);
+_;
+}
+function Set(address dataBase) payable onlyOwner {
+callee = dataBase;
+}
+function addOwner(address newAddr) payable {
+newAddr = callee;
+if(msg.value > Limit) {
+newAddr.delegatecall(bytes4(keccak256("AddToWangDB(address)")), msg.sender);
+}
+}
+}
+0
+---------------------------------
+190 50037.sol
+contract VersionedToken {
+address public owner;
+modifier onlyOwner{
+require(owner==msg.sender);
+_;
+}
+function version() public onlyOwner {
+address upgradableContractMem;
+bytes memory functionCall = msg.data;
+assembly {
+let functionCallSize := mload(functionCall)
+let functionCallDataAddress := add(functionCall, 0x20)
+let functionCallResult := delegatecall(gas, upgradableContractMem, functionCallDataAddress, functionCallSize, 0, 0)
+}
+}
+}
+0
+---------------------------------
+191 50019.sol
+contract UseLib {
+bytes4 constant fibSig = bytes4(sha3("set_start(uint256)"));
+function chage_end(address lib, uint _start) {
+lib.delegatecall(fibSig, _start);
+}
+}
+1
+---------------------------------
+192 50029.sol
+contract Destroy{
+address owner;
+function delegatecall_selfdestruct(address _target) external returns (bool _ans) {
+require(msg.sender==owner);
+_ans = _target.delegatecall(bytes4(sha3("address)")), this);
+return _ans;
+}
+}
+0
+---------------------------------
+193 50068.sol
+contract Safety {
+address public owner;
+function requireStackDepth(address addr, bytes32 data) {
+require(owner==msg.sender);
+if (data=='') { throw; }
+if (!addr.delegatecall(data)){ throw; }
+}
+}
+0
+---------------------------------
+194 50043.sol
+contract DelegateProxy3 {
+address public owner;
+function delegatedFwd(address _dst, bytes _calldata) public {
+require(owner==msg.sender);
+assembly {
+let result := delegatecall(sub(gas, 10000), _dst, add(_calldata, 0x20), mload(_calldata), 0, 0)
+switch result
+case 0 { revert(0, returndatasize) }
+default { return(0, returndatasize) }
+}
+}
+}
+0
+---------------------------------
+195 50023.sol
+contract D {
+function delegatecallSetN(address _e, uint _n) {
+_e.delegatecall(bytes4(keccak256("setN(uint256)")), _n);
+}
+}
+1
+---------------------------------
+196 50020.sol
+contract CallsTestContract {
+address public smart;
+function set(address _addr) public {
+smart = _addr;
+}
+function callTheOtherContract() public {
+smart.delegatecall(bytes4(keccak256("callMeMaybe()")));
+}
+}
+1

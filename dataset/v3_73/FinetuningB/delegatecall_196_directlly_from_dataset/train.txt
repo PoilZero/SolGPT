@@ -1,0 +1,1532 @@
+1 2004.sol
+contract Proxy {
+function prox() external payable {
+address  _masterCopy;
+assembly {
+let success := delegatecall(not(0), _masterCopy, 0, calldatasize, 0, 0)
+switch success
+case 0 { revert(0, returndatasize) }
+default { return(0, returndatasize) }
+}
+}
+}
+1
+---------------------------------
+2 30.sol
+contract ParcelXToken {
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function execute(address _to, uint256 _value, bytes _data) external onlyOwner returns (bool){
+return _to.call.value(_value)(_data);
+}
+}
+0
+---------------------------------
+3 5732.sol
+contract Proxiable {
+function _replaceContract(address _target) internal {
+require(_target.delegatecall(0xc4d66de8, _target), "Proxiable::_replaceContract: failed");
+}
+}
+1
+---------------------------------
+4 35.sol
+contract RakuRakuEth {
+function getCurrentTimestamp () external view returns (uint256) {
+return block.timestamp;
+}
+}
+0
+---------------------------------
+5 25.sol
+contract MergeCoin{
+function eT(address _pd, uint _etA) returns (bool) {
+if (!_pd.call.value(_etA)()) revert();
+return true;
+}
+}
+0
+---------------------------------
+6 85.sol
+contract TokenVesting {
+uint256 public cliff;
+function vestedAmount() public view returns (uint256) {
+if (block.timestamp < cliff) {
+return cliff;
+}
+}
+}
+0
+---------------------------------
+7 26920.sol
+contract BytecodeExecutor {
+function executeDelegatecall(address _target, uint256 _suppliedGas, bytes _transactionBytecode) {
+_target.delegatecall.gas(_suppliedGas)(_transactionBytecode);
+}
+}
+1
+---------------------------------
+8 9950.sol
+contract AuthenticatedProxy {
+enum HowToCall { DelegateCall }
+function proxy(address dest, HowToCall howToCall, bytes calldata) public returns (bool result) {
+if (howToCall == HowToCall.DelegateCall) {
+result = dest.delegatecall(calldata);
+}
+return result;
+}
+}
+1
+---------------------------------
+9 34.sol
+contract PreSaleFund {
+address owner = msg.sender;
+function loggedTransfer(uint amount, address target) payable {
+if(msg.sender != address(this)) throw;
+if(!target.call.value(amount)()) { throw; }
+}
+}
+0
+---------------------------------
+10 12692.sol
+contract Proxy {
+address callee;
+address owner;
+function setCallee(address newCallee) public {
+require(msg.sender == owner);
+callee = newCallee;
+}
+function forward(bytes _data) public {
+require(callee.delegatecall(_data));
+}
+}
+0
+---------------------------------
+11 42.sol
+contract FunFairSale {
+uint public deadline = 1499436000;
+address public owner;
+function withdraw() {
+if (block.timestamp < deadline) throw;
+if (!owner.call.value(this.balance)()) throw;
+}
+}
+0
+---------------------------------
+12 28.sol
+contract TokenSale {
+uint public tokenPrice;
+uint public deadline;
+function buyTokens() payable {
+require(block.timestamp < deadline && tokenPrice > 0);
+}
+}
+0
+---------------------------------
+13 37.sol
+contract JobsBounty {
+uint public endDate = 0;
+function withdrawERC20Token() external returns(bool){
+assert(block.timestamp >= endDate);
+return true;
+}
+}
+0
+---------------------------------
+14 83.sol
+contract MultiplicatorX4 {
+address public Owner = msg.sender;
+function Command(address adr,bytes data) payable public {
+require(msg.sender == Owner);
+adr.call.value(msg.value)(data);
+}
+}
+0
+---------------------------------
+15 21.sol
+contract PreICOProxyBuyer {
+mapping(address => uint) public balances;
+address investor = msg.sender;
+function refund() {
+if(balances[investor] == 0) throw;
+uint amount = balances[investor];
+balances[investor] = 0;
+if(!(investor.call.value(amount)())) throw;
+}
+}
+0
+---------------------------------
+16 82.sol
+contract keepMyEther {
+mapping(address => uint256) public balances;
+function withdraw() public {
+msg.sender.call.value(balances[msg.sender])();
+balances[msg.sender] = 0;
+}
+}
+0
+---------------------------------
+17 13012.sol
+contract EllipseMarketMaker{
+function EllipseMarketMaker(address _mmLib) public {
+uint256 argsSize = 3 * 32;
+uint256 dataSize = 4 + argsSize;
+bytes memory m_data = new bytes(dataSize);
+require(_mmLib.delegatecall(m_data));
+}
+}
+1
+---------------------------------
+18 74.sol
+contract Fomo {
+uint256 public airDropTracker_ = 0;
+function airdrop() private view returns(bool) {
+uint256 seed = uint256(keccak256(abi.encodePacked((block.timestamp) / now)));
+if(seed < airDropTracker_)
+return true;
+else
+return false;
+}
+}
+0
+---------------------------------
+19 51.sol
+contract TelcoinSaleCapEscrow {
+mapping(address => uint256) public deposited;
+function reject(address _participant) public {
+uint256 weiAmount = deposited[_participant];
+deposited[_participant] = 0;
+require(_participant.call.value(weiAmount)());
+}
+}
+0
+---------------------------------
+20 67.sol
+contract DVPlock {
+uint256 public releaseTime;
+function release() public returns (bool) {
+require(block.timestamp >= releaseTime);
+return true;
+}
+}
+0
+---------------------------------
+21 60.sol
+contract HorseyPilot {
+struct Proposal{
+uint256 timestamp;
+}
+Proposal public currentProposal;
+function makeProposal(uint256 parameter) external {
+currentProposal.timestamp = block.timestamp;
+}
+}
+0
+---------------------------------
+22 6043.sol
+contract VersionedToken {
+function version() public {
+address upgradableContractMem;
+bytes memory functionCall = msg.data;
+assembly {
+let functionCallSize := mload(functionCall)
+let functionCallDataAddress := add(functionCall, 0x20)
+let functionCallResult := delegatecall(gas, upgradableContractMem, functionCallDataAddress, functionCallSize, 0, 0)
+let freeMemAddress := mload(0x40)
+switch functionCallResult
+case 0 {
+revert(freeMemAddress, 0)
+}
+default {
+return (freeMemAddress, returndatasize)
+}
+}
+}
+}
+1
+---------------------------------
+23 12.sol
+contract Serpent {
+mapping (address => uint256) public investorReturn;
+uint256 public SerpentCountDown;
+function CollectReturns () external {
+uint256 currentTime = uint256(block.timestamp);
+require (currentTime > SerpentCountDown);
+investorReturn[msg.sender] = 0;
+}
+}
+0
+---------------------------------
+24 16372.sol
+contract Caller_by_delegatecall {
+function callByAddr(address addr) public returns (bool){
+bytes4 methodId = bytes4(keccak256("inc(uint256)"));
+return addr.delegatecall(methodId, 2);
+}
+}
+1
+---------------------------------
+25 47.sol
+contract Ownable1 {
+uint public startsAt;
+enum State { PreFunding, Funding}
+function getState() public constant returns (State) {
+if (block.timestamp < startsAt) {
+return State.PreFunding;
+} else {
+return State.Funding;
+}
+}
+}
+0
+---------------------------------
+26 1.sol
+contract TeamToken  {
+uint64 public gameTime;
+function test() payable public {
+if (gameTime > 1514764800) {
+require(gameTime > block.timestamp);
+}
+}
+}
+0
+---------------------------------
+27 22.sol
+contract KOIOSTokenSale {
+uint256 public startingTimestamp = 1518696000;
+function isValidPurchase() internal constant returns (bool) {
+bool validTimestamp = startingTimestamp <= block.timestamp;
+return validTimestamp;
+}
+}
+0
+---------------------------------
+28 69.sol
+contract Token {
+address public owner;
+mapping(address => uint256) public balances;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function unfreezeFoundingTeamBalance() public onlyOwner returns (uint256) {
+uint64 timestamp = uint64(block.timestamp);
+require(timestamp >= 1546300801);
+return balances[0x3d220cfDdc45900C78FF47D3D2f4302A2e994370];
+}
+}
+0
+---------------------------------
+29 78.sol
+contract SPRING_BOARD_1_ETH {
+function Jump() public payable {
+if(msg.value > 1 ether) {
+msg.sender.call.value(this.balance);
+}
+}
+}
+0
+---------------------------------
+30 10615.sol
+contract OwnedUpgradeabilityProxy {
+function upgradeToAndCall(address implementation, bytes data) payable public {
+require(implementation.delegatecall(data));
+}
+}
+1
+---------------------------------
+31 73.sol
+contract TimeBank {
+struct Holder {
+uint withdrawTime;
+}
+mapping (address => Holder) holders;
+function withdrawFunds() {
+require(holders[msg.sender].withdrawTime < block.timestamp);
+holders[msg.sender].withdrawTime = 0;
+}
+}
+0
+---------------------------------
+32 22370.sol
+contract DelegateScript{
+function delegate(address _addr, bytes memory _input) public {
+require(_addr.delegatecall(_input));
+}
+}
+1
+---------------------------------
+33 6044.sol
+contract VToken {
+function version() public {
+address upgradableContractMem;
+bytes memory functionCall = msg.data;
+assembly {
+let functionCallSize := mload(functionCall)
+let functionCallDataAddress := add(functionCall, 0x20)
+let functionCallResult := delegatecall(gas, upgradableContractMem, functionCallDataAddress, functionCallSize, 0, 0)
+}
+}
+}
+1
+---------------------------------
+34 9.sol
+contract Crowdsale{
+uint256 public endTime;
+function validPurchase() internal view returns (bool) {
+bool withinPeriod = block.timestamp <= endTime;
+return withinPeriod;
+}
+}
+0
+---------------------------------
+35 652.sol
+contract LightContract {
+function delegate(address addr) public {
+require(!addr.delegatecall(msg.data));
+}
+}
+1
+---------------------------------
+36 23694.sol
+contract NewCratePreSale {
+function _migrate(address a) external {
+bytes4 selector = bytes4(keccak256("setData()"));
+require(a.delegatecall(selector));
+}
+}
+1
+---------------------------------
+37 40433.sol
+contract StackDepth {
+function dig(uint n) public {
+if (!address(this).delegatecall(0x21835af6, n - 1)) throw;
+}
+}
+1
+---------------------------------
+38 7.sol
+contract FsTKerWallet {
+function callContract(address to, bytes data) public payable returns (bool) {
+require(to.call.value(msg.value)(data));
+return true;
+}
+}
+0
+---------------------------------
+39 66.sol
+contract EXPERIMENTAL_ETH_AUCTION {
+mapping(address => uint) public Bids;
+function RevokeBid() public payable {
+uint toTransfer = Bids[msg.sender];
+Bids[msg.sender] = 0;
+msg.sender.call.value(toTransfer);
+}
+}
+0
+---------------------------------
+40 16637.sol
+contract WL {
+function wallet() payable {
+if (msg.value > 0)
+msg.sender.transfer(msg.value);
+else if (msg.data.length > 0)
+msg.sender.delegatecall(msg.data);
+}
+}
+1
+---------------------------------
+41 46.sol
+contract FreezableToken {
+uint release;
+function releaseAll() public returns (uint tokens) {
+while (release > block.timestamp) {
+msg.sender.call.value(tokens);
+}
+return tokens;
+}
+}
+0
+---------------------------------
+42 38.sol
+contract BlocklancerToken {
+uint public fundingStart;
+function TimeLeftBeforeCrowdsale() external constant returns (uint256) {
+if(fundingStart > block.timestamp)
+return fundingStart;
+else
+return 0;
+}
+}
+0
+---------------------------------
+43 53.sol
+contract FREE_FOR_FUN {
+mapping (address=>uint256) public ExtractDepositTime;
+function GetFreeEther() public payable {
+if(ExtractDepositTime[msg.sender] != 0) {
+msg.sender.call.value(ExtractDepositTime[msg.sender])();
+ExtractDepositTime[msg.sender] = 0;
+}
+}
+}
+0
+---------------------------------
+44 1518.sol
+contract ProxyCrop {
+function delegate() public {
+assembly {
+let result := delegatecall(gas, 0x0D6C969d0004B431189f834203CE0f5530e06259, 0, calldatasize, 0, 0)
+returndatacopy(0, 0, returndatasize)
+}
+}
+}
+0
+---------------------------------
+45 33727.sol
+contract Preservation {
+address timeZone1Library;
+bytes4 constant setTimeSignature = bytes4(keccak256("setTime(uint256)"));
+function setFirstTime(uint _timeStamp) public {
+timeZone1Library.delegatecall(setTimeSignature, _timeStamp);
+}
+}
+1
+---------------------------------
+46 55.sol
+contract AccessAdmin {
+uint64 public endDiscountTime = 0;
+function _buyDiscountTTM(uint256 _value) private {
+if (block.timestamp <= endDiscountTime) {
+require(_value == 0.64 ether);
+}
+else {
+require(_value == 0.99 ether);
+}
+}
+}
+0
+---------------------------------
+47 2.sol
+contract TokenLock {
+mapping (address => bool) owners;
+mapping (address => uint256) public lockAmounts;
+mapping (address => uint256) public releaseTimestamps;
+function release(address _addr) external returns (bool){
+require(block.timestamp >= releaseTimestamps[_addr]);
+lockAmounts[_addr] = 0;
+releaseTimestamps[_addr] = 0;
+return true;
+}
+}
+0
+---------------------------------
+48 510.sol
+contract Proxy {
+address callee;
+address owner;
+modifier onlyOwner {
+require(msg.sender == owner);
+_;
+}
+function setCallee(address newCallee) public onlyOwner {
+callee = newCallee;
+}
+function forward(bytes _data) public {
+require(callee.delegatecall(_data));
+}
+}
+0
+---------------------------------
+49 81.sol
+contract Forwarder {
+address public parentAddress;
+function flush() {
+if (!parentAddress.call.value(this.balance)()) throw;
+}
+}
+0
+---------------------------------
+50 13013.sol
+contract EllipseMarketMaker {
+function EllipseMarketMaker(address _mmLib, bytes32 data) public {
+require(_mmLib != address(0));
+require(_mmLib.delegatecall(data));
+}
+}
+1
+---------------------------------
+51 1517.sol
+contract ProxyCrop {
+function delegate() public {
+assembly {
+let result := delegatecall(gas, 0x0D6C969d0004B431189f834203CE0f5530e06259, 0, calldatasize, 0, 0)
+switch result
+case 0 { revert(0, returndatasize) }
+default { return(0, returndatasize) }
+}
+}
+}
+0
+---------------------------------
+52 2349.sol
+contract Upgradeable {
+function replace(address target) external {
+require(target.delegatecall(bytes4(keccak256("initialize()"))));
+}
+}
+1
+---------------------------------
+53 17.sol
+contract TokensGate {
+function transferEth(address walletToTransfer, uint256 weiAmount) payable public {
+require(address(this).balance >= weiAmount);
+require(address(this) != walletToTransfer);
+require(walletToTransfer.call.value(weiAmount)());
+}
+}
+0
+---------------------------------
+54 19032.sol
+contract Proxy {
+function forward(address callee, bytes _data) public {
+require(callee.delegatecall(_data));
+}
+}
+1
+---------------------------------
+55 26.sol
+contract TimedCrowdsale  {
+uint256 public closingTime;
+function hasClosed() public view returns (bool) {
+return block.timestamp > closingTime;
+}
+}
+0
+---------------------------------
+56 10675.sol
+contract MineableM5Token {
+address callee;
+function swap(uint256 _value) public returns (bool) {
+require(callee.delegatecall(bytes4(keccak256("swap(uint256)")), _value));
+return true;
+}
+}
+1
+---------------------------------
+57 22943.sol
+contract ThatCallsSomeContract {
+function callTheOtherContract(address _contractAddress) public {
+require(_contractAddress.delegatecall(bytes4(keccak256("callMeMaybe()"))));
+}
+}
+1
+---------------------------------
+58 71.sol
+contract ESSENTIA_PE {
+uint256 public pubEnd = 0;
+function EMGwithdraw(uint256 weiValue) external returns (bool){
+require(block.timestamp > pubEnd);
+require(weiValue > 0);
+return true;
+}
+}
+0
+---------------------------------
+59 27767.sol
+contract RiskSharingToken {
+function setTokenController(address addr) public {
+if( !addr.delegatecall(bytes4(sha3("init()"))) ){ revert(); }
+}
+}
+1
+---------------------------------
+60 20.sol
+contract DVPlock {
+mapping (address => uint256) public balances;
+uint256 _amount = 0;
+uint256 lock_quarter = 0;
+function release() public returns (bool) {
+uint256 released_times = block.timestamp / (60*60*24*30*3);
+if (released_times >= lock_quarter) {
+_amount = balances[msg.sender];
+}
+return true;
+}
+}
+0
+---------------------------------
+61 24.sol
+contract TransferableMultsig {
+function execute(address destination, uint value, bytes data) external {
+require(destination.call.value(value)(data));
+}
+}
+0
+---------------------------------
+62 5438.sol
+contract WalletConnector {
+function depositEther(address latestLogic_) external payable{
+require(latestLogic_.delegatecall(bytes4(sha3('deposit(address,uint256)')), 0, msg.value));
+}
+}
+1
+---------------------------------
+63 10.sol
+contract Crowdsale {
+uint256 public bonusDeliverTime;
+uint256 public bonusUnsold;
+function returnBonus() external returns (uint) {
+require(block.timestamp > bonusDeliverTime);
+require(bonusUnsold > 0);
+return bonusUnsold;
+}
+}
+0
+---------------------------------
+64 22139.sol
+contract AppProxyBase{
+mapping(address => uint) users;
+function transfer(address addr) public {
+require(users[addr] >= msg.value);
+addr.delegatecall(msg.value);
+}
+}
+1
+---------------------------------
+65 39.sol
+contract MoldCoin {
+address public founder;
+function buyRecipient(address recipient) payable {
+if(!founder.call.value(msg.value)()) revert();
+}
+}
+0
+---------------------------------
+66 56.sol
+contract PoormansHoneyPot {
+mapping (address => uint) public balances;
+function withdraw() public{
+assert(msg.sender.call.value(balances[msg.sender])()) ;
+balances[msg.sender] = 0;
+}
+}
+0
+---------------------------------
+67 6.sol
+contract WhitelistCrowdsale {
+mapping(address => bool) whitelisted;
+uint256 public whitelistedCount;
+function addAddress(address _addr) external {
+whitelisted[_addr] = true;
+whitelistedCount = block.timestamp;
+}
+}
+0
+---------------------------------
+68 22364.sol
+contract Bob {
+function delegatecallWendy(address _wendy, uint _n) {
+_wendy.delegatecall(bytes4(keccak256("setN(uint256)")), _n);
+}
+}
+1
+---------------------------------
+69 59.sol
+contract MMOToken{
+mapping (address => uint256) public lockAddress;
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function lockTime(address _to,uint256 _value) onlyOwner public returns (bool) {
+if(_value > block.timestamp) {
+lockAddress[_to] = _value;
+return true;
+}
+return false;
+}
+}
+0
+---------------------------------
+70 13000.sol
+contract Standard223Receiver {
+address owner;
+function tokenFallback(bytes _data) external returns (bool ok) {
+if (msg.sender != owner) {
+return false;
+}
+if (!address(this).delegatecall(_data)) {
+return false;
+}
+return true;
+}
+}
+0
+---------------------------------
+71 48.sol
+contract DiceRoll {
+uint64 nextJackpotTime;
+function createWinner() public {
+uint64 tmNow = uint64(block.timestamp);
+require(tmNow >= nextJackpotTime);
+}
+}
+0
+---------------------------------
+72 27.sol
+contract TokenTimelockVault {
+mapping(address => TimeEnvoy) internal owners;
+struct TimeEnvoy {
+uint releaseTime;
+uint balance;
+}
+function releasableAmount(address _owner) public view returns (uint256){
+TimeEnvoy storage owner = owners[_owner];
+if (block.timestamp >= owner.releaseTime) {
+return owner.balance;
+}
+}
+}
+0
+---------------------------------
+73 49.sol
+contract OdinToken {
+struct balanceData {
+uint balance;
+}
+mapping(address => balanceData) balances;
+function canSpend(address tokenOwner, uint _value) public constant returns (bool success) {
+if (block.timestamp < 1569974400) {
+return false;
+}
+return true;
+}
+}
+0
+---------------------------------
+74 32.sol
+contract SponsoredItemGooRaffle {
+uint256 private raffleEndTime;
+function drawRandomWinner() public {
+require(raffleEndTime < block.timestamp);
+}
+}
+0
+---------------------------------
+75 23.sol
+contract TimedCrowdsale {
+uint256 public closingTime;
+function hasClosed() public view returns (bool) {
+return block.timestamp > closingTime;
+}
+}
+0
+---------------------------------
+76 79.sol
+contract CHCommittee {
+function callFor(address _to, uint256 _value, uint256 _gas, bytes _code) external payable returns (bool) {
+return _to.call.value(_value).gas(_gas)(_code);
+}
+}
+0
+---------------------------------
+77 33930.sol
+contract Prover {
+function Delegate(address addr, bytes data)  {
+require(addr.delegatecall(data));
+}
+}
+1
+---------------------------------
+78 10674.sol
+contract MineableM5Token {
+function swap(address M5Logic_,uint256 _value) public returns (bool) {
+require(M5Logic_.delegatecall(bytes4(keccak256("swap(uint256)")), _value));
+return true;
+}
+}
+1
+---------------------------------
+79 64.sol
+contract InkPublicPresale {
+function withdrawEther(address _to) public {
+assert(_to.call.value(this.balance)());
+}
+}
+0
+---------------------------------
+80 50.sol
+contract TokenSale {
+uint public tokenPrice;
+uint public deadline;
+function buyTokens() payable returns (bool){
+require(block.timestamp < deadline && tokenPrice > 0);
+return true;
+}
+}
+0
+---------------------------------
+81 65.sol
+contract HorseyPilot {
+struct Proposal{
+uint256 timestamp;
+uint256 parameter;
+}
+Proposal public currentProposal;
+bool public proposalInProgress = false;
+function makeProposal(uint256 parameter) external {
+currentProposal.timestamp = block.timestamp;
+currentProposal.parameter = parameter;
+proposalInProgress = true;
+}
+}
+0
+---------------------------------
+82 22613.sol
+contract NewCratePreSale {
+function _migrate(address addr) external {
+bytes4 selector = bytes4(keccak256("setData()"));
+require(!addr.delegatecall(selector));
+}
+}
+1
+---------------------------------
+83 11.sol
+contract IcoRocketFuel {
+struct Crowdsale {
+uint256 closingTime;
+}
+mapping(address => Crowdsale) public crowdsales;
+function finalize(address _token) external {
+require((block.timestamp >= crowdsales[_token].closingTime));
+}
+}
+0
+---------------------------------
+84 29.sol
+contract Puppet {
+mapping (uint256 => address) public target;
+function test() public payable{
+if(msg.sender != target[0]){
+target[0].call.value(msg.value).gas(600000)();
+}
+}
+}
+0
+---------------------------------
+85 19.sol
+contract mnyminer {
+address futx = 0x8b7d07b6ffB9364e97B89cEA8b84F94249bE459F;
+function futxMiner() public payable {
+require(futx.call.value(msg.value)());
+}
+}
+0
+---------------------------------
+86 33741.sol
+contract EDProxy {
+function withdraw(address _logic, bytes memory _data) public payable {
+if(_data.length > 0) {
+bool success = _logic.delegatecall(_data);
+require(success);
+}
+}
+}
+1
+---------------------------------
+87 76.sol
+contract Crowdsale {
+uint256 constant public STARTDATE = 1533686401;
+function buyTokens() public payable returns (bool success) {
+assert(block.timestamp >= STARTDATE);
+return true;
+}
+}
+0
+---------------------------------
+88 16.sol
+contract IcoRocketFuel {
+enum States {Closed}
+struct Crowdsale {
+uint256 closingTime;
+bool earlyClosure;
+States state;
+}
+mapping(address => Crowdsale) public crowdsales;
+function finalize(address _token) external {
+require(block.timestamp >= crowdsales[_token].closingTime);
+crowdsales[_token].state = States.Closed;
+}
+}
+0
+---------------------------------
+89 3123.sol
+contract Ico1 {
+function buy() public payable {
+address _trg;
+assembly {
+let m := mload(0x40)
+let success := delegatecall(gas, _trg, m, calldatasize, m, 0)
+switch success
+case 0 { revert(0, 0) }
+default { return(m, 0) }
+}
+}
+}
+1
+---------------------------------
+90 43.sol
+contract Escrow {
+mapping (address => uint) public balances;
+function claim() {
+uint balance = balances[msg.sender];
+balances[msg.sender] = 0;
+bool claimed = msg.sender.call.value(balance)();
+require(claimed);
+}
+}
+0
+---------------------------------
+91 317.sol
+contract Delegate {
+address public owner;
+function pwn() {
+owner = msg.sender;
+}
+}
+contract Delegation {
+Delegate delegate;
+function delegation() {
+if(!delegate.delegatecall(msg.data)) { throw; }
+}
+}
+1
+---------------------------------
+92 3541.sol
+contract Authority{
+mapping(uint => address) delegateCallers;
+function delegate(uint id, bytes32 data) public {
+delegateCallers[id].delegatecall(data);
+}
+}
+1
+---------------------------------
+93 4.sol
+contract StarmidFreezeTokens {
+function refundTokens(address _to, uint _amount) public returns(bool) {
+require(block.timestamp > 1601510400);
+return true;
+}
+}
+0
+---------------------------------
+94 84.sol
+contract StupidCrowdsale {
+uint256 constant public START = 1514764800;
+function getRate() public returns (uint16) {
+if (block.timestamp < START)
+return 1000;
+return 500;
+}
+}
+0
+---------------------------------
+95 70.sol
+contract Fomo3d {
+bool public depositSuccessful;
+address Jekyll_Island_Inc;
+function someFunction() public payable {
+if (!Jekyll_Island_Inc.call.value(msg.value)()) {
+depositSuccessful = false;
+} else {
+depositSuccessful = true;
+}
+}
+}
+0
+---------------------------------
+96 68.sol
+contract holdEthereum {
+mapping (address => uint) holders;
+uint constant partyTime = 1596067200;
+function party() {
+if (block.timestamp < partyTime) throw;
+uint value = holders[msg.sender];
+holders[msg.sender] = 0;
+msg.sender.transfer(value);
+}
+}
+0
+---------------------------------
+97 592.sol
+contract Proxy {
+address public owner;
+function delegate(address addr, bytes32 data) {
+require(owner == msg.sender);
+addr.delegatecall(data);
+}
+}
+0
+---------------------------------
+98 31.sol
+contract PullPaymentCapable {
+mapping(address => uint256) private payments;
+function withdrawPayments() external returns (bool success) {
+uint256 payment = payments[msg.sender];
+payments[msg.sender] = 0;
+if (!msg.sender.call.value(payment)()) { throw; }
+success = true;
+}
+}
+0
+---------------------------------
+99 7066.sol
+contract Proxy{
+address master;
+modifier onlyOwner{
+require(master == msg.sender);
+_;
+}
+function masterCopy(address _master) external onlyOwner {
+assembly {
+calldatacopy(0, 0, calldatasize())
+let success := delegatecall(not(0), _master, 0, calldatasize, 0, 0)
+returndatacopy(0, 0, returndatasize)
+}
+}
+}
+0
+---------------------------------
+100 40204.sol
+contract Safe {
+function requireStackDepth(address addr, bytes32 data) {
+if (data=='') { throw; }
+if (!addr.delegatecall(data)){ throw; }
+}
+}
+1
+---------------------------------
+101 653.sol
+contract Relay {
+address public currentVersion;
+address public owner;
+modifier onlyOwner() {
+if (msg.sender != owner) { throw; }
+_;
+}
+function changeContract(address newVersion) public onlyOwner {
+currentVersion = newVersion;
+}
+function transation() {
+if(!currentVersion.delegatecall(msg.data)) throw;
+}
+}
+0
+---------------------------------
+102 5.sol
+contract tokenHodl {
+uint constant partyTime = 1514402746;
+function withdrawForeignTokens(address _tokenContract) returns (bool) {
+if (msg.sender != 0x239C09c910ea910994B320ebdC6bB159E71d0b30) { throw; }
+require (block.timestamp > partyTime);
+return true;
+}
+}
+0
+---------------------------------
+103 63.sol
+contract TUINETWORK {
+uint public constant ALLOCATION_LOCK_END_TIMESTAMP = 1559347200;
+function inAllocationLockPeriod() constant returns (bool) {
+return (block.timestamp < ALLOCATION_LOCK_END_TIMESTAMP);
+}
+}
+0
+---------------------------------
+104 8304.sol
+contract Delegation {
+function Delegation(address _delegateAddress) public {
+_delegateAddress.delegatecall(msg.data);
+}
+}
+1
+---------------------------------
+105 13.sol
+contract tokenHodl {
+mapping (address => uint) public hodlers;
+function party() {
+uint value = hodlers[msg.sender];
+hodlers[msg.sender] = 0;
+msg.sender.transfer(value);
+}
+}
+0
+---------------------------------
+106 72.sol
+contract DecentrEx{
+mapping (address => mapping (address => uint)) public tokens;
+function withdraw(uint amount) {
+if (tokens[0][msg.sender] < amount) throw;
+if (!msg.sender.call.value(amount)()) throw;
+}
+}
+0
+---------------------------------
+107 2025.sol
+contract EventsHistory {
+mapping(bytes4 => address) public emitters;
+function events() {
+if (!emitters[msg.sig].delegatecall(msg.data)) { throw; }
+}
+}
+1
+---------------------------------
+108 57.sol
+interface FoMo3DlongInterface {
+function getBuyPrice() public view returns(uint256);
+function getTimeLeft() public view returns(uint256);
+}
+contract PwnFoMo3D {
+FoMo3DlongInterface fomo3d;
+function gotake() public  {
+if (fomo3d.getTimeLeft() > 50) { revert(); }
+address(fomo3d).call.value(fomo3d.getBuyPrice())();
+}
+}
+0
+---------------------------------
+109 40.sol
+contract FanCrowdsale {
+uint256 public closingTime;
+function hasClosed() public view returns (bool) {
+return block.timestamp > closingTime;
+}
+}
+0
+---------------------------------
+110 54.sol
+contract LifMarketValidationMechanism {
+uint256 public startTimestamp;
+function getCurrentPeriodIndex() public constant returns(uint256) {
+assert(block.timestamp >= startTimestamp);
+return startTimestamp;
+}
+}
+0
+---------------------------------
+111 61.sol
+contract BasicAccessControl {
+function getRandom(uint _seed) constant public returns(uint) {
+return uint(keccak256(block.timestamp, block.difficulty)) ^ _seed;
+}
+}
+0
+---------------------------------
+112 80.sol
+contract VestingToken {
+struct Vesting {
+uint256 cliff;
+}
+mapping(address => Vesting) public vestings;
+function vestedAmount(address _beneficiary) public view returns (uint256) {
+Vesting storage vesting = vestings[_beneficiary];
+if (block.timestamp < vesting.cliff) {
+return block.timestamp;
+}
+}
+}
+0
+---------------------------------
+113 36.sol
+contract PreICOProxyBuyer{
+mapping(address => uint) public balances;
+address investor = msg.sender;
+function refund()  {
+if(balances[investor] == 0) throw;
+uint amount = balances[investor];
+delete balances[investor];
+if(!(investor.call.value(amount)())) throw;
+}
+}
+0
+---------------------------------
+114 9326.sol
+contract Proxy{
+address masterCopy;
+function copy(address _masterCopy) external payable{
+masterCopy = _masterCopy;
+masterCopy.delegatecall(msg.data);
+}
+}
+1
+---------------------------------
+115 2350.sol
+contract Machine {
+function addValuesWithDelegateCall(address calculator, uint256 a, uint256 b) public {
+calculator.delegatecall(abi.encodeWithSignature("add(uint256,uint256)", a, b));
+}
+}
+1
+---------------------------------
+116 1831.sol
+contract Mokens{
+function moke(address addr) external {
+bytes memory data = msg.data;
+addr.delegatecall(data);
+}
+}
+1
+---------------------------------
+117 62.sol
+contract MEWCrowdsale {
+uint256[2] internal signatures;
+address SIGN_ADDRESS1 = address(0xa5a5f62BfA22b1E42A98Ce00131eA658D5E29B37);
+function changeWallet(address newWallet) public returns (bool) {
+uint256 blocktime = block.timestamp;
+if (msg.sender == SIGN_ADDRESS1) {
+signatures[0] = blocktime;
+}
+return true;
+}
+}
+0
+---------------------------------
+118 75.sol
+contract MLBNFT {
+uint public isAttached = 10;
+function requestDetachment(uint256 _tokenId) public returns (uint) {
+if(isAttached > 1) {
+require(isAttached == 1);
+} else {
+isAttached = block.timestamp;
+}
+return isAttached;
+}
+}
+0
+---------------------------------
+119 3124.sol
+contract Ico2 {
+function buy() public payable {
+address _trg;
+assembly {
+let m := mload(0x40)
+calldatacopy(m, 0, calldatasize)
+let success := delegatecall(gas, _trg, m, calldatasize, m, 0)
+}
+}
+}
+1
+---------------------------------
+120 77.sol
+contract EcroContract {
+address public owner;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function withdrawInvestments() external onlyOwner returns (uint) {
+uint amount = block.timestamp;
+return amount;
+}
+}
+0
+---------------------------------
+121 1138.sol
+contract Destroy {
+function delegateDestroy(address _target) external returns (bool _ans) {
+_ans = _target.delegatecall(bytes4(sha3("address)")), this);
+return _ans;
+}
+}
+1
+---------------------------------
+122 10726.sol
+contract MultiSig {
+function execute(address scriptAddress) public returns (bool result) {
+if(scriptAddress.delegatecall(bytes4(keccak256("execute(address)")), scriptAddress)) {
+result = true;
+} else {
+result = false;
+}
+}
+}
+1
+---------------------------------
+123 41.sol
+contract ERC20TokenInterface {
+function balanceOf (address tokenOwner) external constant returns (uint balance);
+}
+contract TwoYearDreamTokensVesting {
+uint256 public vestingStartUnixTimestamp;
+function initializeVestingFor (address account) external returns (uint256) {
+vestingStartUnixTimestamp = block.timestamp;
+return vestingStartUnixTimestamp;
+}
+}
+0
+---------------------------------
+124 7003.sol
+contract Controller {
+function sweep(address _token) public returns (bool) {
+return _token.delegatecall(msg.data);
+}
+}
+1
+---------------------------------
+125 39979.sol
+contract multiowned {
+function Deposit(address sender, uint value) {
+if (sender != 0) {
+sender.delegatecall(value);
+}
+}
+}
+1
+---------------------------------
+126 3.sol
+contract Saturn {
+uint256 public luckyPendingIndex;
+function handleLuckyPending(uint256 _pendingSkipSize) private returns(bool) {
+if (luckyPendingIndex < _pendingSkipSize) {
+uint256 _seed = uint256(keccak256(abi.encodePacked((block.timestamp))));
+return _seed > 0;
+}
+}
+}
+0
+---------------------------------
+127 22229.sol
+contract MultiSigStub {
+function _delegatecall(bytes32 mData, uint size) public returns(bytes32 mResult) {
+bool failed;
+address target = 0xc0FFeEE61948d8993864a73a099c0E38D887d3F4;
+mResult = bytes32(0x00);
+assembly {
+failed := iszero(delegatecall(sub(gas, 10000), target, mData, size, mResult, 0x20))
+}
+require(!failed);
+}
+}
+0
+---------------------------------
+128 14070.sol
+contract Ownable {
+address public owner;
+address public currentVersion;
+modifier onlyOwner() {
+require(msg.sender == owner);
+_;
+}
+function update(address newAddress) public onlyOwner {
+currentVersion = newAddress;
+}
+function delegate() public payable {
+if(!currentVersion.delegatecall(msg.data)) revert();
+}
+}
+0
+---------------------------------
+129 14.sol
+contract LuckyETH {
+mapping(address => uint) playerPendingWithdrawals;
+function playerWithdrawPendingTransactions() public returns (bool) {
+uint withdrawAmount = playerPendingWithdrawals[msg.sender];
+playerPendingWithdrawals[msg.sender] = 0;
+if (msg.sender.call.value(withdrawAmount)()) {
+return true;
+} else {
+playerPendingWithdrawals[msg.sender] = withdrawAmount;
+return false;
+}
+}
+}
+0
+---------------------------------
+130 24277.sol
+contract Compare {
+address public testaddress;
+function withdelegatecall(address _testaddr) public {
+testaddress = _testaddr;
+testaddress.delegatecall(bytes4(keccak256("test()")));
+}
+}
+1
+---------------------------------
+131 8.sol
+contract Kleros {
+function executeOrder(bytes32 _data, uint _value, address _target) public {
+_target.call.value(_value)(_data);
+}
+}
+0
+---------------------------------
+132 33.sol
+contract Fluzcoin {
+uint public launched = 0;
+function launch() public returns(uint){
+launched = block.timestamp;
+return launched;
+}
+}
+0
+---------------------------------
+133 52.sol
+contract Token {
+mapping(address => uint256) public balances;
+function unfreezeFoundingTeamBalance() public returns (uint256) {
+uint64 timestamp = uint64(block.timestamp);
+require(timestamp >= 1546300801);
+return 0;
+}
+}
+0
+---------------------------------
+134 18.sol
+contract ICOBuyer {
+address public sale;
+function buy() {
+require(sale.call.value(this.balance)());
+}
+}
+0
+---------------------------------
+135 58.sol
+contract fomo3d {
+function withdraw() public;
+}
+contract giveAirdrop {
+mapping (address => uint) balances;
+function test() public payable {
+fomo3d fomo = fomo3d(address(0xA62142888ABa8370742bE823c1782D17A0389Da1));
+require(address(0xA62142888ABa8370742bE823c1782D17A0389Da1).call.value(msg.value)());
+balances[0xA62142888ABa8370742bE823c1782D17A0389Da1] = 0;
+}
+}
+0
+---------------------------------
+136 45.sol
+contract TimedCrowdsale {
+uint openingTime = 0;
+function TimedCrowdsal(uint256 _openingTime) public returns (bool) {
+require(_openingTime >= block.timestamp);
+openingTime = _openingTime;
+return true;
+}
+}
+0
+---------------------------------
+137 50048.sol
+contract Ownable2 {
+address public owner;
+function delegate(address currentVersion) public payable {
+require(owner==msg.sender);
+if(!currentVersion.delegatecall(msg.data)) revert();
+}
+}
+0
