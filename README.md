@@ -8,7 +8,7 @@ Paper "SolGPT: a GPT-Based Static Vulnerability Detection Model for Enhancing Sm
 
 Author: Shengqiang Zeng, Hongwei Zhang, Jinsong Wang, and Kai Shi.
 
-Online Link [Springer](https://link.springer.com/chapter/10.1007/978-981-97-0859-8_3) .
+Online Link [SolGPT: a GPT-Based Static Vulnerability Detection Model for Enhancing Smart Contract Security](https://link.springer.com/chapter/10.1007/978-981-97-0859-8_3).
 
 Paper Manuscript already upload as ["SolGPT.9.17.2023"](https://github.com/PoilZero/SolGPT/blob/main/SolGPT.9.17.2023.pdf).
 
