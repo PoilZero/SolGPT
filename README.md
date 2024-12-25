@@ -47,3 +47,24 @@ You can see the instruction in train_tapt.sh and train_finetune.sh to learn how 
 * Rechecker for Normalized dataset: https://github.com/Messi-Q/ReChecker
   * This Project already stops maintained, this is a branch that I keep maintaining.
   * https://github.com/PoilZero/ReChecker
+
+## Citation
+
+```
+@inproceedings{zeng2023solgpt,
+  title={SolGPT: A GPT-Based Static Vulnerability Detection Model for Enhancing Smart Contract Security},
+  author={Zeng, Shengqiang and Zhang, Hongwei and Wang, Jinsong and Shi, Kai},
+  booktitle={International Conference on Algorithms and Architectures for Parallel Processing},
+  pages={42--62},
+  year={2023},
+  organization={Springer}
+}
+@inproceedings{zeng2023high,
+  title={A High-Performance Smart Contract Vulnerability Detection Scheme Based on BERT},
+  author={Zeng, Shengqiang and Chen, Ruhuang and Zhang, Hongwei and Wang, Jinsong},
+  booktitle={2023 IEEE 29th International Conference on Parallel and Distributed Systems (ICPADS)},
+  pages={653--658},
+  year={2023},
+  organization={IEEE}
+}
+```
